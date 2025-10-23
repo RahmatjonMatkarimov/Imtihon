@@ -22,8 +22,7 @@ const PostCategory = async (req, res, next) => {
 
 const GetCategory = async (req, res, next) => {
     try {
-        const categories = await categorySchema.find().populate("Cars")
-
+        const categories = await categorySchema.find()
         res.status(200).json({
             categories
         })

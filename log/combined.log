@@ -29,3 +29,9 @@ error: Path `cars` is required.,Path `img` is required.
 error: Path `img` is required.
 error: Path `frontImage` is required.,Path `backImage` is required.,Path `modelImage` is required.
 error: Path `frontImage` is required.,Path `backImage` is required.,Path `modelImage` is required.
+error: token not found {"errors":[],"status":404}
+error: token not found {"errors":[],"status":404}
+info: login succuess ------ rahmatjon974@gmail.com
+error: not verified {"errors":[],"status":401}
+error: you are not admin {"errors":[],"status":400}
+error: you are not admin {"errors":[],"status":400}

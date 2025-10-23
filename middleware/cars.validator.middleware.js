@@ -1,9 +1,9 @@
 const CustomErrorHandler = require("../error/custom-error-handler")
-const authValidator = require("../validator/auth.valudator")
+const carValidation = require("../validator/cars.valedator")
 
 module.exports = (req, res, next) => {
     try {
-        const { error } = authValidator(req.body)
+        const { error } = carValidation(req.body)
 
         if (error) {
             throw CustomErrorHandler.BadRequest(error.message)

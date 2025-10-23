@@ -12,7 +12,7 @@ authRouter.post("/login", login)
 authRouter.get("/logOut", authMiddleware, logout)
 authRouter.post("/resetPassword", authMiddleware, resetPassword)
 authRouter.get("/refreshToken", refreshToken)
-authRouter.get("/user", authMiddleware, GetUser)
+authRouter.get("/user/:id",authMiddleware, GetUser)
 
 
 module.exports = authRouter

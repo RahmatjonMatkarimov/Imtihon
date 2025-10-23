@@ -4,6 +4,8 @@ const logger = require("../utils/logger")
 const randomNum = require("../utils/randomNum")
 const { accessToken, refreshToken } = require("../utils/generator_token")
 const CustomErrorHandler = require("../error/custom-error-handler")
+const categorySchema = require("../schema/category.schema")
+const carsSchema = require("../schema/cars.schema")
 
 const register = async (req, res, next) => {
     try {
@@ -162,13 +164,28 @@ const resetPassword = async (req, res, next) => {
 
 const GetUser = async (req, res, next) => {
     try {
-        const foundedUser = await authSchema.findById(req.user.id)
+        const foundedUser = await authSchema.findById(req.params.id)
 
         if (!foundedUser) {
             throw CustomErrorHandler.NotFound("user not found")
         }
+        const { email, role, createdAt, _id } = foundedUser
 
-        res.status(200).json(foundedUser)
+        if (role === "user") {
+            return res.status(200).json({ email, role, createdAt, _id, })
+        } {
+            const category = await categorySchema.find({ owner_id: _id })
+            const cars = await carsSchema.find({ owner_id: _id })
+            return res.status(200).json({
+                _id,
+                email,
+                role,
+                createdAt,
+                category,
+                cars 
+            })
+        }
+
     } catch (err) {
         next(err)
     }

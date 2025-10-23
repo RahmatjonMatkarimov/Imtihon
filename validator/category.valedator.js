@@ -5,7 +5,6 @@ const categoryValidator = (data) => {
         name: Joi.string().required().min(2),
         img: Joi.string().required().min(6),
         owner_id: Joi.string().required().min(5),
-        cars: Joi.string().required().min(5)
     });
 
     return schema.validate(data);
