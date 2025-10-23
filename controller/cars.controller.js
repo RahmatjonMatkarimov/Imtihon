@@ -5,8 +5,6 @@ const PostCar = async (req, res, next) => {
     try {
         const { brand, model, year, motor, color, distance, gearbox, price, description, owner_id, category_id } = req.body
         const { frontImage, backImage, modelImage } = req.files
-        console.log(req.files);
-
 
         await carsSchema.create({
             brand,
@@ -73,15 +71,15 @@ const PutCar = async (req, res, next) => {
         const updateData = { brand, model, year, motor, color, distance, gearbox, price, description, owner_id }
 
         if (frontImage) {
-            updateData.frontImage = frontImage.path
+            updateData.frontImage = frontImage[0].filename
         }
 
         if (backImage) {
-            updateData.backImage = backImage.path
+            updateData.backImage = backImage[0].filename
         }
 
         if (modelImage) {
-            updateData.modelImage = modelImage.path
+            updateData.modelImage = modelImage[0].filename
         }
 
         const car = await carsSchema.findByIdAndUpdate(id, updateData)
