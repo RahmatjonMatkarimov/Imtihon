@@ -1,61 +1,43 @@
-// 1-masala
-// const rearrange = (arr) => {
-//     let res = []
-//     let sorted = arr.sort((a, b) => a - b)
+const express = require("express");
+const cors = require("cors");
+const connentDB = require("./config/connentDB");
+const swigger = require('swagger-ui-express')
+const YAML = require("yamljs");
+const authRouter = require("./router/auth.routes");
+const errorMiddleware = require("./middleware/error.middleware");
+const cookieParser = require("cookie-parser");
+const CarsRouter = require("./router/cars.routes");
+const categoriesRouter = require("./router/categories.routes");
+require("dotenv").config();
 
-//     for (let i = 0; i < arr.length; i++) {
-//         let index = sorted.length - 1
-//         res.push(sorted[index])
-//         res.push(sorted[0])
-//         sorted.pop()
-//         sorted.shift()
-//     }
-//     res.push(sorted[1])
-//     res.push(sorted[0])
-//     return res
-// }
-// console.log(rearrange([1, 2, 3, 4, 5, 6]));
+const PORT = process.env.PORT || 3000;
+const app = express();
+app.use(cors());
+app.use(cookieParser())
+app.use(express.json());
 
-// 2-masala
-// const unicueWords = (str) => [...new Set(str.split(' '))]
-// console.log(unicueWords('qwe qwe qwe asd wqe asd ewr gfd'));
+// DB connected
+connentDB()
 
-// 3-masala
-// const findLongestWords = (arr) => {
-//     let Longest = []
-//     let res
-//     for (let i = 0; i < arr.length; i++) {
-//         Longest.push(arr[i].length)        
-//     }
-//     let maxWordsLength = Math.max(...Longest)
-//     for (let i = 0; i < arr.length; i++) {
-//         if (arr[i].length === maxWordsLength) {
-//             res = arr[i]
-//         }
-//     }
-//     return res
-// }
-// console.log(findLongestWords(['asadf','asdf','salomlar']));
+// documentation
+const swiggerDocs = YAML.load("./doc/document.yml")
+app.use("/docs", swigger.serve, swigger.setup(swiggerDocs))
 
-// 4-masala
-// const multiString =(str,num)=>{
-//     let res = ''
-//     for (let i = 0; i < num; i++) {
-//         res +=str        
-//     }
-//     return res
-// }
-// console.log(multiString('salom',3));
+// test api
+app.get("/", (req, res) => {
+  res.status(200).send(`<h1>hello world</h1>`)
+})
 
-// 5-masala
-// const findCommonEloments = (arr1, arr2) => {
-//     let res = []
-//     for (let i = 0; i < arr1.length; i++) {
-//         if (arr2.includes(arr1[i])) {
-//             res.push(arr1[i])
-//         }        
-//     }
-//     return res
-// }
+// Routers
+app.use(authRouter)
+app.use(CarsRouter)
+app.use(categoriesRouter)
 
-// console.log(findCommonEloments([1,2,3,4,5],[5,6,7,3,9]));
+
+// Error Handler
+app.use(errorMiddleware)
+
+app.listen(PORT, () => {
+  console.log(`document http://localhost:${PORT}/docs`);
+  console.log(`server http://localhost:${PORT}/`);
+});

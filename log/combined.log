@@ -1,0 +1,31 @@
+info: registered [object Object]
+info: registered [object Object]
+info: registered {"email":"rahmatjon976@gmail.com","password":"$2b$12$oYfxGmA3eFfjBzRhfSXyi.xvriquZYFAupy/sMscbxxlUNDWY5LTq","otp":"853905","otpTime":1761042965791}
+info: registered {"email":"rahmatjon978@gmail.com","password":"$2b$12$o3Bzqg86vIJSgygIpZEg0euHnugx/lIUl0AkuEyhWcUL8dmnX3hBK","otp":"048490","otpTime":1761043002526}
+info: registered {"email":"rahmatjon97d8@gmail.com","password":"$2b$12$Ae7thGFrUaUMaEj3XDerhOlkF3s.H/truY7EnqricptF.5nsxT8JC","otp":"475626","otpTime":1761043023082}
+info: registered {"email":"rahmatjon974@gmail.com","password":"$2b$12$BdDZoqOIrLqq5sNDo6QLJObZxbaksfwA3Df.l0r.xxOsA8ocTDK26","otp":"149399","otpTime":1761043387707}
+info: registered {"email":"rahmatjon975@gmail.com","password":"$2b$12$Ul4gXIw5RrdIf5YXbrsjAei5hLWkt7x7erExfXDteBUlT190fu5hW","otp":null,"otpTime":1761044985185}
+info: registered {"email":"rahmatjon975@gmail.com","password":"$2b$12$AE5snhlLR6KbCK5wryerLuEQidxMMwwwkmCEoUErAHxS8PRxM41ny","otp":null,"otpTime":1761045014630}
+info: registered {"email":"rahmatjon974@gmail.com","password":"$2b$12$2/8sd5.F.q/xl1yMw5ZfBe.rx/IKF5DTg/DjzFGLELDutR.uCU0y2","otp":[5,8,2,8,2,4],"otpTime":1761193678306}
+info: registered {"email":"rahmatjon974@gmail.com","password":"$2b$12$/8EgPxpmeeA3eCKYUsaFS.A9Xko0TdBT5SJB4AzyWor3lIlibHpPa","otp":"007166","otpTime":1761193734370}
+info: reset password succuess ------- rahmatjon974@gmail.com
+error: not verified {"errors":[],"status":401}
+error: token not found {"errors":[],"status":404}
+error: token not found {"errors":[],"status":404}
+error: token not found {"errors":[],"status":404}
+error: token not found {"errors":[],"status":404}
+error: token not found {"errors":[],"status":404}
+error: token not found {"errors":[],"status":404}
+error: token not found {"errors":[],"status":404}
+error: "email" is required {"errors":[],"status":400}
+error: "email" is required {"errors":[],"status":400}
+error: "otp" is required {"errors":[],"status":400}
+error: "otp" is required {"errors":[],"status":400}
+error: such user already exists {"errors":[],"status":400}
+info: login succuess ------ rahmatjon974@gmail.com
+error: not verified {"errors":[],"status":401}
+error: Path `cars` is required.,Path `img` is required.
+error: Path `cars` is required.,Path `img` is required.
+error: Path `img` is required.
+error: Path `frontImage` is required.,Path `backImage` is required.,Path `modelImage` is required.
+error: Path `frontImage` is required.,Path `backImage` is required.,Path `modelImage` is required.
