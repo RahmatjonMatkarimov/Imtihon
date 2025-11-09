@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { category, product } from "../model/association.ts";
 import CustomErrorHandler from "../error/custom-error-handler.ts";
 import type { CreateProductDTO, UpdateProductDTO } from "../dto/products.dto.ts";
+import { Op } from "sequelize";
 
 product.sync({ force: false })
 
@@ -142,3 +143,24 @@ export const likes = async (req: Request, res: Response, next: NextFunction) => 
         next(err);
     }
 };
+
+export const search = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { search } = req.query;
+
+        const products = await product.findAll({
+            where: {
+                name: {
+                    [Op.iLike]: `%${search}%`
+                }
+            }
+        });
+
+        res.status(200).json({
+            products
+        });
+
+    } catch (err) {
+        next(err);
+    }
+}

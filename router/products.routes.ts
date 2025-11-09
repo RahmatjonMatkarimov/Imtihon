@@ -7,6 +7,7 @@ import {
   DeleteProduct,
   likes,
   Cards,
+  search,
 } from "../controller/products.controller.ts";
 import upload from "../utils/file_upload.ts";
 import auth from "../middleware/auth.middleware.ts";
@@ -21,3 +22,4 @@ ProductRouter.put("/product/:id", adminAuth, PutProduct);
 ProductRouter.delete("/product/:id", adminAuth, DeleteProduct);
 ProductRouter.get("/likes", auth, likes);
 ProductRouter.get("/card", auth, Cards);
+ProductRouter.get("/search", auth, search);
