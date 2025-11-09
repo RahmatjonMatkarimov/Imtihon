@@ -115,7 +115,7 @@ export const DeleteProduct = async (req: Request, res: Response, next: NextFunct
 
 export const Cards = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.params;
+        const id = req.user?._id
 
         const cardProducts = await product.findAll({ where: { user_id: id, isCard: true, }, });
 
@@ -130,12 +130,12 @@ export const Cards = async (req: Request, res: Response, next: NextFunction) => 
 
 export const likes = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.params;
+        const id = req.user?._id
 
         const cardProducts = await product.findAll({ where: { user_id: id, isLike: true, }, });
 
         res.status(200).json({
-            message: "card products",
+            message: "like products",
             data: cardProducts,
         });
     } catch (err) {
