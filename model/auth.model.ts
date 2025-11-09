@@ -4,6 +4,7 @@ import sequelize from '../config/connentDB.ts';
 export class users extends Model {
     username!: string;
 }
+
 users.init({
     id: {
         type: DataTypes.INTEGER,
