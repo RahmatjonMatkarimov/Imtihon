@@ -128,6 +128,31 @@ export const Cards = async (req: Request, res: Response, next: NextFunction) => 
         next(err);
     }
 };
+export const addcard = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params;
+        const { isCard } = req.body;
+
+        const foundProduct = await product.findByPk(id);
+
+        if (!foundProduct) {
+            throw CustomErrorHandler.NotFound("Product not found");
+        }
+
+        if (!isCard || typeof isCard !== "boolean") {
+            throw CustomErrorHandler.NotFound("isCard is not a boolean or not found");
+        }
+
+        await foundProduct.update({ isCard });
+
+        res.status(200).json({
+            message: "Product updated",
+            data: foundProduct,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
 
 export const likes = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -138,6 +163,32 @@ export const likes = async (req: Request, res: Response, next: NextFunction) => 
         res.status(200).json({
             message: "like products",
             data: cardProducts,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const addLikesProduct = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params;
+        const { isLike } = req.body;
+
+        const foundProduct = await product.findByPk(id);
+
+        if (!foundProduct) {
+            throw CustomErrorHandler.NotFound("Product not found");
+        }
+
+        if (!isLike || typeof isLike !== "boolean") {
+            throw CustomErrorHandler.NotFound("isLike is not a boolean or not found");
+        }
+
+        await foundProduct.update({ isLike });
+
+        res.status(200).json({
+            message: "Product updated",
+            data: foundProduct,
         });
     } catch (err) {
         next(err);
@@ -160,6 +211,19 @@ export const search = async (req: Request, res: Response, next: NextFunction) =>
             products
         });
 
+    } catch (err) {
+        next(err);
+    }
+}
+export const topRating = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const products = await product.findAll({
+            order: [['rating', 'DESC']]
+        });
+
+        res.status(200).json({
+            products
+        });
     } catch (err) {
         next(err);
     }

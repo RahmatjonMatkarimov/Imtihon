@@ -7,12 +7,13 @@ category.sync({ force: false })
 
 export const PostCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { name, owner_id } = req.body;
+        const { name, owner_id, image } = req.body;
 
         await category.create({
             name,
+            image,
             owner_id,
-        }) as CreateCategoryDTO;
+        }) as unknown as CreateCategoryDTO;
 
         res.status(201).json({
             message: "Category created",
@@ -57,7 +58,7 @@ export const GetOneCategory = async (req: Request, res: Response, next: NextFunc
 export const PutCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const { name } = req.body;
+        const { name, image } = req.body;
 
         const foundCategory = await category.findByPk(id);
 
@@ -65,7 +66,7 @@ export const PutCategory = async (req: Request, res: Response, next: NextFunctio
             throw CustomErrorHandler.NotFound("Category not found");
         }
 
-        await foundCategory.update({ name }) as UpdateCategoryDTO;
+        await foundCategory.update({ name, image }) as UpdateCategoryDTO;
 
         res.status(200).json({
             message: "Category updated",
