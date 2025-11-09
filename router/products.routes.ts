@@ -5,6 +5,8 @@ import {
   GetOneProduct,
   PutProduct,
   DeleteProduct,
+  likes,
+  Cards,
 } from "../controller/products.controller.ts";
 import upload from "../utils/file_upload.ts";
 
@@ -15,3 +17,5 @@ ProductRouter.get("/product", GetProducts);
 ProductRouter.get("/product/:id", GetOneProduct);
 ProductRouter.put("/product/:id", PutProduct);
 ProductRouter.delete("/product/:id", DeleteProduct);
+ProductRouter.delete("/likes/:id", likes);
+ProductRouter.delete("/card/:id", Cards);

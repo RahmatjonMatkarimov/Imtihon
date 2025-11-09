@@ -10,7 +10,7 @@ class CustomErrorHandler extends Error {
     super(message);
     this.status = status;
     this.errors = errors;
-    Object.setPrototypeOf(this, CustomErrorHandler.prototype); // Error extend muammosi uchun
+    Object.setPrototypeOf(this, CustomErrorHandler.prototype); 
   }
 
   static BadRequest(message: string, errors: ErrorDetail[] = []): CustomErrorHandler {

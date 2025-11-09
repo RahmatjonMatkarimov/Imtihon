@@ -25,13 +25,13 @@ app.get("/", (req:Request, res:Response) => {
   res.status(200).send(`<h1>hello world</h1>`)
 })
 
-// Error Handler
-app.use(errorMiddleware)
-
 // Router 
 app.use(authRouter)
 app.use(categoryRouter)
 app.use(ProductRouter)
+
+// Error Handler
+app.use(errorMiddleware)
 
 app.listen(PORT, () => {
   console.log(`document http://localhost:${PORT}/docs`);

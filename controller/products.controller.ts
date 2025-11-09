@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { product } from "../model/association.ts";
+import { category, product } from "../model/association.ts";
 import CustomErrorHandler from "../error/custom-error-handler.ts";
 import type { CreateProductDTO, UpdateProductDTO } from "../dto/products.dto.ts";
 
@@ -57,12 +57,16 @@ export const GetOneProduct = async (req: Request, res: Response, next: NextFunct
         const { id } = req.params;
 
         const foundProduct = await product.findByPk(id);
+        const products = await category.findByPk(foundProduct?.category_id);
 
         if (!foundProduct) {
             throw CustomErrorHandler.NotFound("Product not found");
         }
 
-        res.status(200).json({ data: foundProduct });
+        res.status(200).json({
+            data: foundProduct,
+            products
+        });
     } catch (err) {
         next(err);
     }
