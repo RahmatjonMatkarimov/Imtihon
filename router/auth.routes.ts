@@ -4,7 +4,8 @@ import {
     verify,
     login,
     logout,
-    resetPassword
+    resetPassword,
+    profile
 } from "../controller/auth.controller.ts";
 import auth from "../middleware/auth.middleware.ts";
 import refreshTokenMiddleware from "../middleware/refreshToken.ts";
@@ -16,4 +17,5 @@ authRouter.post("/verify", verify);
 authRouter.post("/login", login);
 authRouter.post("/logout",auth, logout);
 authRouter.post("/reset-password", auth, resetPassword);
-authRouter.post("/refresh-token", auth, refreshTokenMiddleware);
+authRouter.get("/refresh-token", auth, refreshTokenMiddleware);
+authRouter.get("/profile", auth, profile);

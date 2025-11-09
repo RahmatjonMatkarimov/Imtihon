@@ -168,3 +168,20 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
         next(err);
     }
 };
+export const profile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = req.user?._id;
+        const foundedUser = await users.findOne({ where: { id } });
+
+        if (!foundedUser) {
+            throw CustomErrorHandler.NotFound("user not found");
+        }
+
+        res.status(201).json({
+            message: "success",
+            data: foundedUser
+        });
+    } catch (err) {
+        next(err);
+    }
+};
