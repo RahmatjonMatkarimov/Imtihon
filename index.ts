@@ -5,6 +5,9 @@ import YAML from "yamljs";
 import errorMiddleware from "./middleware/error.middleware.ts";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
+import { authRouter } from "./router/auth.routes.ts";
+import { categoryRouter } from "./router/category.routes.ts";
+import { ProductRouter } from "./router/products.routes.ts";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -24,6 +27,11 @@ app.get("/", (req:Request, res:Response) => {
 
 // Error Handler
 app.use(errorMiddleware)
+
+// Router 
+app.use(authRouter)
+app.use(categoryRouter)
+app.use(ProductRouter)
 
 app.listen(PORT, () => {
   console.log(`document http://localhost:${PORT}/docs`);
