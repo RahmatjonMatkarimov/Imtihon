@@ -1,4 +1,4 @@
-import express from "express";
+import express, { type Request, type Response } from "express";
 import cors from "cors";
 import swigger from 'swagger-ui-express';
 import YAML from "yamljs";
@@ -18,7 +18,7 @@ const swiggerDocs = YAML.load("./doc/document.yml")
 app.use("/docs", swigger.serve, swigger.setup(swiggerDocs))
 
 // test api
-app.get("/", (req, res) => {
+app.get("/", (req:Request, res:Response) => {
   res.status(200).send(`<h1>hello world</h1>`)
 })
 

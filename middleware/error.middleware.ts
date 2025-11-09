@@ -1,7 +1,6 @@
-import type { ErrorRequestHandler, NextFunction, Request, Response } from "express"
-
-const CustomErrorHandler = require("../error/custom-error-handler")
-const logger = require("../utils/logger")
+import type { NextFunction, Request, Response } from "express"
+import CustomErrorHandler from "../error/custom-error-handler.ts"
+import logger from "../utils/logger.ts"
 
 const errorMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
     try {

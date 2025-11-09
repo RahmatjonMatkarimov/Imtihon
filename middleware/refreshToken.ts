@@ -31,7 +31,7 @@ const refreshTokenMiddleware = (req: Request, res: Response, next: NextFunction)
 
         res.cookie("AccessToken", acces, {
             httpOnly: true,
-            maxAge: 15 * 60 * 1000, // 15 daqiqa
+            maxAge: 15 * 60 * 1000, 
         });
 
         next();

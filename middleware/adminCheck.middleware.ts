@@ -2,7 +2,6 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import CustomErrorHandler from "../error/custom-error-handler.ts";
 
-// Express Request interfeysini kengaytiramiz, shunda `req.user` bo‘lishi mumkin
 declare module "express-serve-static-core" {
     interface Request {
         user?: jwt.JwtPayload | { username: string; _id: string; role: string };
