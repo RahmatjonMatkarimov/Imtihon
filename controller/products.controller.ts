@@ -18,6 +18,7 @@ export const PostProduct = async (req: Request, res: Response, next: NextFunctio
             rating,
             images,
             user_id,
+            paymentType,
             category_id,
         } = req.body;
 
@@ -30,6 +31,7 @@ export const PostProduct = async (req: Request, res: Response, next: NextFunctio
             size,
             rating: rating || 0,
             images,
+            paymentType,
             user_id,
             category_id,
         }) as unknown as CreateProductDTO;
@@ -128,6 +130,7 @@ export const Cards = async (req: Request, res: Response, next: NextFunction) => 
         next(err);
     }
 };
+
 export const addcard = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
@@ -215,6 +218,7 @@ export const search = async (req: Request, res: Response, next: NextFunction) =>
         next(err);
     }
 }
+
 export const topRating = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const products = await product.findAll({

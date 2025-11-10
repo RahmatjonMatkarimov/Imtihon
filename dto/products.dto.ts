@@ -8,6 +8,7 @@ export interface CreateProductDTO {
     rating?: number;
     images: string[];
     user_id: number;
+    paymentType?: 'cash' | 'onlinePay';
     category_id: number;
 }
 export interface UpdateProductDTO {
@@ -19,6 +20,7 @@ export interface UpdateProductDTO {
     size?: string;
     rating?: number;
     images?: string[];
+    paymentType?: 'cash' | 'onlinePay';
     isLike?: boolean;
     isCard?: boolean;
 }

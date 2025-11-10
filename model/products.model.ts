@@ -12,6 +12,7 @@ export class product extends Model {
     color!: string | null;
     size!: string | null;
     rating!: number;
+    paymentType?: 'cash' | 'onlinePay';
     isCart?: boolean;
     isLike?: boolean;
     images!: string[];
@@ -40,7 +41,7 @@ product.init(
         discount: {
             type: DataTypes.INTEGER,
             allowNull: true,
-            defaultValue: 0, 
+            defaultValue: 0,
         },
         color: {
             type: DataTypes.STRING,
@@ -67,6 +68,11 @@ product.init(
         },
         images: {
             type: DataTypes.ARRAY(DataTypes.STRING),
+            allowNull: true,
+        },
+        paymentType: {
+            type: DataTypes.ENUM('cash', 'onlinePay'),
+            defaultValue: "cash",
             allowNull: true,
         },
         user_id: {
