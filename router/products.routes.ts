@@ -14,16 +14,16 @@ import {
 } from "../controller/products.controller.ts";
 import upload from "../utils/file_upload.ts";
 import auth from "../middleware/auth.middleware.ts";
-import adminAuth from "../middleware/adminCheck.middleware.ts";
+import adminAuth from "../middleware/auth.middleware.ts";
 
 export const ProductRouter = Router();
 
 ProductRouter.post("/product", upload.array("images"), adminAuth, PostProduct);
 ProductRouter.put("/product/:id", upload.array("images"), adminAuth, PutProduct);
 ProductRouter.delete("/product/:id", adminAuth, DeleteProduct);
-ProductRouter.post("/addLikesProduct", auth, addLikesProduct);
+ProductRouter.put("/addLikesProduct/:id", auth, addLikesProduct);
 ProductRouter.get("/product/:id", auth, GetOneProduct);
-ProductRouter.post("/addcartProduct", auth, addcard);
+ProductRouter.put("/addcartProduct/:id", auth, addcard);
 ProductRouter.get("/product", auth, GetProducts);
 ProductRouter.get("/top", auth, topRating);
 ProductRouter.get("/search", auth, search);

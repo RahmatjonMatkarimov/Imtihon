@@ -4,7 +4,6 @@ import { category } from "./category.model.ts";
 import { users } from "./auth.model.ts";
 
 export class product extends Model {
-    id!: number;
     name!: string;
     description!: string;
     price!: number;
@@ -15,6 +14,7 @@ export class product extends Model {
     paymentType?: 'cash' | 'onlinePay';
     isCart?: boolean;
     isLike?: boolean;
+    user_id!: number;
     images!: string[];
     category_id!: number;
 }

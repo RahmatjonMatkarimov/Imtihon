@@ -48,30 +48,32 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 export const verify = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, otp } = req.body;
-        const foundedUser = await users.findOne({ where: { email } });
 
-        if (!foundedUser) {
+        const foundedUser = await users.findOne({ where: { email }, raw: false });
+
+        if (!foundedUser?.dataValues) {
             throw CustomErrorHandler.NotFound("user not found");
         }
+        console.log(foundedUser?.dataValues);
 
         const time = Date.now();
 
-        if (foundedUser.otpTime && foundedUser.otpTime < time) {
+        if (!foundedUser?.dataValues.otpTime || foundedUser.dataValues.otpTime < time) {
             throw CustomErrorHandler.BadRequest("otp expired");
         }
 
-        if (foundedUser.otp !== otp) {
+        if (String(foundedUser?.dataValues.otp) !== String(otp)) {
             throw CustomErrorHandler.BadRequest("wrong otp");
         }
 
         await users.update(
             { isVerified: true, otp: null, otpTime: null },
-            { where: { id: foundedUser.id } }
+            { where: { id: foundedUser.dataValues.id } }
         );
 
         logger.info("verify success ----- " + email);
 
-        res.status(201).json({
+        res.status(200).json({
             message: "verified successfully",
         });
     } catch (err) {
@@ -79,29 +81,30 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
+
 export const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body;
-        const foundedUser = await users.findOne({ where: { email } });
+        const foundedUser = await users.findOne({ where: { email }, raw: false });
 
-        if (!foundedUser) {
+        if (!foundedUser?.dataValues) {
             throw CustomErrorHandler.NotFound("user not found");
         }
 
-        const decode = await bcrypt.compare(password, foundedUser.password);
+        const decode = await bcrypt.compare(password, foundedUser.dataValues.password);
 
         if (!decode) {
             throw CustomErrorHandler.BadRequest("wrong password");
         }
 
-        if (!foundedUser.isVerified) {
+        if (!foundedUser.dataValues.isVerified) {
             throw CustomErrorHandler.UnAuthorized("not verified");
         }
 
         const payload = {
-            username: foundedUser.username,
-            id: foundedUser.id,
-            role: foundedUser.role,
+            username: foundedUser.dataValues.username,
+            id: foundedUser.dataValues.id,
+            role: foundedUser.dataValues.role,
         };
 
         const access = accessToken(payload);
@@ -149,14 +152,14 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
             throw CustomErrorHandler.NotFound("user not found");
         }
 
-        if (!foundedUser.isVerified) {
+        if (!foundedUser.dataValues.isVerified) {
             throw CustomErrorHandler.UnAuthorized("not verified");
         }
 
         const hashPassword = await bcrypt.hash(password, 12);
         await users.update(
             { password: hashPassword },
-            { where: { id: foundedUser.id } }
+            { where: { id: foundedUser.dataValues.id } }
         );
 
         logger.info("reset password success ------- " + email);
@@ -170,7 +173,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
 };
 export const profile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.user?._id;
+        const id = req.user?.id;
         const foundedUser = await users.findOne({ where: { id } });
 
         if (!foundedUser) {

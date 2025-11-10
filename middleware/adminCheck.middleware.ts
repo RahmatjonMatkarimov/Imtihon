@@ -4,7 +4,7 @@ import CustomErrorHandler from "../error/custom-error-handler.ts";
 
 declare module "express-serve-static-core" {
     interface Request {
-        user?: jwt.JwtPayload | { username: string; _id: string; role: string };
+        user?: jwt.JwtPayload | { username: string; id: string; role: string };
     }
 }
 

@@ -34,7 +34,7 @@ export const PostProduct = async (req: Request, res: Response, next: NextFunctio
             paymentType,
             user_id,
             category_id,
-        }) as unknown as CreateProductDTO;
+        }) as CreateProductDTO;
 
         res.status(201).json({
             message: "Product created",
@@ -60,7 +60,10 @@ export const GetOneProduct = async (req: Request, res: Response, next: NextFunct
         const { id } = req.params;
 
         const foundProduct = await product.findByPk(id);
-        const products = await category.findByPk(foundProduct?.category_id);
+        const products = await category.findByPk(foundProduct?.dataValues.category_id);
+        console.log(foundProduct);
+        console.log(products);
+        
 
         if (!foundProduct) {
             throw CustomErrorHandler.NotFound("Product not found");
@@ -118,7 +121,7 @@ export const DeleteProduct = async (req: Request, res: Response, next: NextFunct
 
 export const Cards = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.user?._id
+        const id = req.user?.id
 
         const cardProducts = await product.findAll({ where: { user_id: id, isCard: true, }, });
 
@@ -159,7 +162,7 @@ export const addcard = async (req: Request, res: Response, next: NextFunction) =
 
 export const likes = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.user?._id
+        const id = req.user?.id
 
         const cardProducts = await product.findAll({ where: { user_id: id, isLike: true, }, });
 

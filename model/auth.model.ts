@@ -2,7 +2,6 @@ import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/connentDB.ts";
 
 export class users extends Model {
-    id!: number;
     username!: string;
     email!: string;
     password!: string;

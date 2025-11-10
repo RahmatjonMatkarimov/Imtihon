@@ -7,7 +7,7 @@ const sequelize = new Sequelize({
     host: "localhost",
     port: 5432,
     password: process.env.DB_PASS || "admin",
-    database: process.env.DB_NAME || "crm",
+    database: process.env.DB_NAME || "imtihon",
     username: "postgres",
     logging: false
 })

@@ -1,1 +1,728 @@
-openapi: 3.0.0
+openapi: 3.0.3
+info:
+  title: E-commerce API
+  description: Foydalanuvchi autentifikatsiyasi, kategoriyalar va mahsulotlar boshqaruvi
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@ecommerce.uz
+
+servers:
+  - url: http://localhost:3000/
+    description: Local development
+  - url: https://api.ecommerce.uz/api
+    description: Production
+
+paths:
+  # ==================== AUTH ENDPOINTS ====================
+  /register:
+    post:
+      tags: [Auth]
+      summary: Ro'yxatdan o'tish
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterRequest'
+      responses:
+        '200': { $ref: '#/components/responses/RegisterResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+
+  /verify:
+    post:
+      tags: [Auth]
+      summary: Emailni tasdiqlash (OTP)
+      requestBody:
+        $ref: '#/components/requestBodies/VerifyRequest'
+      responses:
+        '201': { $ref: '#/components/responses/VerifyResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /login:
+    post:
+      tags: [Auth]
+      summary: Tizimga kirish
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequest'
+      responses:
+        '201': { $ref: '#/components/responses/LoginResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /logout:
+    post:
+      tags: [Auth]
+      summary: Chiqish
+      security:
+        - cookieAuth: []
+      responses:
+        '201': { $ref: '#/components/responses/LogoutResponse' }
+
+  /reset-password:
+    post:
+      tags: [Auth]
+      summary: Parolni tiklash
+      security:
+        - cookieAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ResetPasswordRequest'
+      responses:
+        '201': { $ref: '#/components/responses/ResetPasswordResponse' }
+
+  /refresh-token:
+    get:
+      tags: [Auth]
+      summary: Yangi Access Token
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { description: OK }
+
+  /profile:
+    get:
+      tags: [Auth]
+      summary: Profil
+      security:
+        - cookieAuth: []
+      responses:
+        '201': { $ref: '#/components/responses/ProfileResponse' }
+
+  # ==================== CATEGORY ENDPOINTS ====================
+  /category:
+    post:
+      tags: [Category]
+      summary: Kategoriya yaratish (admin)
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequest'
+      responses:
+        '201': { $ref: '#/components/responses/CreateCategoryResponse' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+    get:
+      tags: [Category]
+      summary: Barcha kategoriyalar
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/GetCategoriesResponse' }
+
+  /category/{id}:
+    get:
+      tags: [Category]
+      summary: Bitta kategoriya (mahsulotlar bilan)
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/GetOneCategoryResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+    put:
+      tags: [Category]
+      summary: Kategoriyani yangilash (admin)
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryRequest'
+      responses:
+        '200': { $ref: '#/components/responses/UpdateCategoryResponse' }
+
+    delete:
+      tags: [Category]
+      summary: Kategoriyani o'chirish (admin)
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/DeleteCategoryResponse' }
+
+  # ==================== PRODUCT ENDPOINTS ====================
+  /product:
+    post:
+      tags: [Product]
+      summary: Mahsulot yaratish (admin)
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201': { $ref: '#/components/responses/CreateProductResponse' }
+
+    get:
+      tags: [Product]
+      summary: Barcha mahsulotlar
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/GetProductsResponse' }
+
+  /product/{id}:
+    get:
+      tags: [Product]
+      summary: Bitta mahsulot
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/GetOneProductResponse' }
+
+    put:
+      tags: [Product]
+      summary: Mahsulotni yangilash (admin)
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+      responses:
+        '200': { $ref: '#/components/responses/UpdateProductResponse' }
+
+    delete:
+      tags: [Product]
+      summary: Mahsulotni o'chirish (admin)
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/DeleteProductResponse' }
+
+  /addLikesProduct/{id}:
+    put:
+      tags: [Product]
+      summary: Mahsulotni yoqtirish
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Yoqtiriladigan mahsulotning ID raqami
+      requestBody:
+        $ref: '#/components/requestBodies/LikeRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/LikeResponse'
+
+  /addcartProduct/{id}:
+    put:
+      tags: [Product]
+      summary: Mahsulotni savatga qo'shish
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Savatga qo'shiladigan mahsulotning ID raqami
+      requestBody:
+        $ref: '#/components/requestBodies/CartRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/CartResponse'
+
+
+  /top:
+    get:
+      tags: [Product]
+      summary: Eng yuqori reytingli mahsulotlar
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/TopRatingResponse' }
+
+  /search:
+    get:
+      tags: [Product]
+      summary: Mahsulot qidirish
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: true
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/SearchResponse' }
+
+  /likes:
+    get:
+      tags: [Product]
+      summary: Yoqtirilgan mahsulotlar
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/LikesResponse' }
+
+  /card:
+    get:
+      tags: [Product]
+      summary: Savatdagi mahsulotlar
+      security:
+        - cookieAuth: []
+      responses:
+        '200': { $ref: '#/components/responses/CardResponse' }
+
+components:
+  parameters:
+    idParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+
+  requestBodies:
+    RegisterRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterRequest'
+    VerifyRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VerifyRequest'
+    LoginRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LoginRequest'
+    ResetPasswordRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResetPasswordRequest'
+    LikeRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [isLike]
+            properties:
+              isLike:
+                type: boolean
+    CartRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [isCard]
+            properties:
+              isCard:
+                type: boolean
+
+  responses:
+    # Auth
+    RegisterResponse:
+      description: Ro'yxatdan o'tdi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              user:
+                type: object
+                properties:
+                  email: { type: string }
+                  otp: { type: string }
+                  otpTime: { type: integer }
+    VerifyResponse:
+      description: Tasdiqlandi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    LoginResponse:
+      description: Kirish muvaffaqiyatli
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              access: { type: string }
+    LogoutResponse:
+      description: Chiqildi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    ResetPasswordResponse:
+      description: Parol o'zgartirildi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    ProfileResponse:
+      description: Profil ma'lumotlari
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              data: { $ref: '#/components/schemas/User' }
+
+    # Category
+    CreateCategoryResponse:
+      description: Kategoriya yaratildi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    GetCategoriesResponse:
+      description: Barcha kategoriyalar
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              categories:
+                type: array
+                items: { $ref: '#/components/schemas/Category' }
+    GetOneCategoryResponse:
+      description: Bitta kategoriya
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data: { $ref: '#/components/schemas/CategoryWithProducts' }
+    UpdateCategoryResponse:
+      description: Yangilandi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    DeleteCategoryResponse:
+      description: O'chirildi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+
+    # Product
+    CreateProductResponse:
+      description: Mahsulot yaratildi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              data: { $ref: '#/components/schemas/Product' }
+    GetProductsResponse:
+      description: Barcha mahsulotlar
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products:
+                type: array
+                items: { $ref: '#/components/schemas/Product' }
+    GetOneProductResponse:
+      description: Bitta mahsulot
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data: { $ref: '#/components/schemas/Product' }
+              products: { $ref: '#/components/schemas/Category' }
+    UpdateProductResponse:
+      description: Yangilandi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              data: { $ref: '#/components/schemas/Product' }
+    DeleteProductResponse:
+      description: O'chirildi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    LikeResponse:
+      description: Yoqtirildi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              data: { $ref: '#/components/schemas/Product' }
+    CartResponse:
+      description: Savatga qo'shildi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              data: { $ref: '#/components/schemas/Product' }
+    TopRatingResponse:
+      description: Eng yaxshi reyting
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products:
+                type: array
+                items: { $ref: '#/components/schemas/Product' }
+    SearchResponse:
+      description: Qidiruv natijalari
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products:
+                type: array
+                items: { $ref: '#/components/schemas/Product' }
+    LikesResponse:
+      description: Yoqtirilganlar
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              data:
+                type: array
+                items: { $ref: '#/components/schemas/Product' }
+    CardResponse:
+      description: Savatcha
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              data:
+                type: array
+                items: { $ref: '#/components/schemas/Product' }
+
+    # Common
+    BadRequest:
+      description: Noto'g'ri so'rov
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    NotFound:
+      description: Topilmadi
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    Unauthorized:
+      description: Ruxsat yo'q
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+    Forbidden:
+      description: Admin emas
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              example: "You are not admin"
+
+  schemas:
+    # Auth
+    RegisterRequest:
+      type: object
+      required: [email, password, username]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+        username: { type: string }
+
+    VerifyRequest:
+      type: object
+      required: [email, otp]
+      properties:
+        email: { type: string, format: email }
+        otp: { type: string }
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+
+    ResetPasswordRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        username: { type: string }
+        email: { type: string, format: email }
+        isVerified: { type: boolean }
+        role: { type: string, enum: [user, admin] }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    # Category
+    CreateCategoryRequest:
+      type: object
+      required: [name, owner_id]
+      properties:
+        name: { type: string }
+        owner_id: { type: integer }
+        image: { type: string, format: binary }
+
+    UpdateCategoryRequest:
+      type: object
+      properties:
+        name: { type: string }
+        image: { type: string, format: binary }
+
+    Category:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        image: { type: string, format: uri }
+        owner_id: { type: integer }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    CategoryWithProducts:
+      allOf:
+        - $ref: '#/components/schemas/Category'
+        - type: object
+          properties:
+            products:
+              type: array
+              items: { $ref: '#/components/schemas/Product' }
+
+    # Product
+    CreateProductRequest:
+      type: object
+      required: [name, price, user_id, category_id]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        price: { type: number, format: float }
+        discount: { type: integer, default: 0 }
+        color: { type: string }
+        size: { type: string }
+        rating: { type: number, default: 0 }
+        paymentType: { type: string, enum: [cash, onlinePay], default: cash }
+        images:
+          type: array
+          items: { type: string, format: binary }
+        user_id: { type: integer }
+        category_id: { type: integer }
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        price: { type: number }
+        discount: { type: integer }
+        color: { type: string }
+        size: { type: string }
+        rating: { type: number }
+        paymentType: { type: string, enum: [cash, onlinePay] }
+        images:
+          type: array
+          items: { type: string, format: binary }
+
+    Product:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        price: { type: number, format: float }
+        discount: { type: integer }
+        color: { type: string }
+        size: { type: string }
+        rating: { type: number }
+        paymentType: { type: string, enum: [cash, onlinePay] }
+        isCard: { type: boolean }
+        isLike: { type: boolean }
+        images:
+          type: array
+          items: { type: string, format: uri }
+        user_id: { type: integer }
+        category_id: { type: integer }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: AccessToken
+
+security:
+  - cookieAuth: []           # TO'G'RI

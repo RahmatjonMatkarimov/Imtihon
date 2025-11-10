@@ -3,9 +3,9 @@ import sequelize from "../config/connentDB.ts";
 import { users } from "./auth.model.ts";
 
 export class category extends Model {
-    id!: number;
     name!: string;
     owner_id!: number;
+    image!: string;
     createdAt!: Date;
     updatedAt!: Date;
 }

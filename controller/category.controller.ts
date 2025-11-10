@@ -7,13 +7,15 @@ category.sync({ force: false })
 
 export const PostCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { name, owner_id, image } = req.body;
+        const { name, owner_id } = req.body;
+
+        const image = `http://localhost:300/uploads/${req.file?.filename}`;
 
         await category.create({
             name,
             image,
             owner_id,
-        }) as unknown as CreateCategoryDTO;
+        })  as CreateCategoryDTO;
 
         res.status(201).json({
             message: "Category created",
