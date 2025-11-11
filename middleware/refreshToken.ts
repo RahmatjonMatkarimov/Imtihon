@@ -1,14 +1,7 @@
-import type { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import { accessToken } from "../utils/generator_token.ts";
+import type { NextFunction, Request, Response } from "express";
 import CustomErrorHandler from "../error/custom-error-handler.ts";
-
-// Express Request interfeysini kengaytiramiz
-declare module "express-serve-static-core" {
-    interface Request {
-        user?: jwt.JwtPayload | { username: string; id: string; role: string };
-    }
-}
+import { accessToken } from "../utils/generator_token.ts";
+import jwt from "jsonwebtoken";
 
 const refreshTokenMiddleware = (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -31,7 +24,7 @@ const refreshTokenMiddleware = (req: Request, res: Response, next: NextFunction)
 
         res.cookie("AccessToken", acces, {
             httpOnly: true,
-            maxAge: 15 * 60 * 1000, 
+            maxAge: 15 * 60 * 1000,
         });
 
         next();

@@ -8,6 +8,8 @@ import dotenv from "dotenv"
 import { authRouter } from "./router/auth.routes.ts";
 import { categoryRouter } from "./router/category.routes.ts";
 import { ProductRouter } from "./router/products.routes.ts";
+import { fileURLToPath } from "url";
+import path from "path";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -15,6 +17,7 @@ const app = express();
 app.use(cors());
 app.use(cookieParser())
 app.use(express.json());
+app.use("/uploads", express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), "./uploads")));
 
 // documentation
 const swiggerDocs = YAML.load("./doc/document.yml")

@@ -24,8 +24,8 @@ export const PostProduct = async (req: Request, res: Response, next: NextFunctio
         const images: string[] = [];
 
         if (Array.isArray(req.files)) {
-            req.files.forEach((file) => {
-                images.push(file.filename);
+            req.files.map((file) => {
+                images.push(`/uploads/${file.filename}`);
             });
         }
 
@@ -68,9 +68,6 @@ export const GetOneProduct = async (req: Request, res: Response, next: NextFunct
 
         const foundProduct = await product.findByPk(id);
         const products = await category.findByPk(foundProduct?.dataValues.category_id);
-        console.log(foundProduct);
-        console.log(products);
-
 
         if (!foundProduct) {
             throw CustomErrorHandler.NotFound("Product not found");
@@ -88,14 +85,21 @@ export const GetOneProduct = async (req: Request, res: Response, next: NextFunct
 export const PutProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-
         const foundProduct = await product.findByPk(id);
 
         if (!foundProduct) {
             throw CustomErrorHandler.NotFound("Product not found");
         }
 
-        await foundProduct.update(req.body) as UpdateProductDTO;
+        const images: string[] = [];
+
+        if (Array.isArray(req.files)) {
+            req.files.map((file) => {
+                images.push(`/uploads/${file.filename}`);
+            });
+        }
+
+        await foundProduct.update({...req.body, images}) as UpdateProductDTO;
 
         res.status(200).json({
             message: "Product updated",
@@ -153,7 +157,7 @@ export const addcard = async (req: Request, res: Response, next: NextFunction) =
         }
 
         if (typeof isCard !== "boolean") {
-            throw CustomErrorHandler.NotFound("isCard is not a boolean or not found");
+            throw CustomErrorHandler.NotFound("isCard is not a boolean");
         }
 
         await foundProduct.update({ isCard });
@@ -194,7 +198,7 @@ export const addLikesProduct = async (req: Request, res: Response, next: NextFun
         }
 
         if (typeof isLike !== "boolean") {
-            throw CustomErrorHandler.NotFound("isLike is not a boolean or not found");
+            throw CustomErrorHandler.NotFound("isLike is not a boolean");
         }
 
         await foundProduct.update({ isLike });

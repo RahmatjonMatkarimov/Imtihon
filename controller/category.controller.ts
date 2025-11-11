@@ -9,7 +9,7 @@ export const PostCategory = async (req: Request, res: Response, next: NextFuncti
     try {
         const { name, owner_id } = req.body;
 
-        const image = `http://localhost:300/uploads/${req.file?.filename}`;
+        const image = `/uploads/${req.file?.filename}`;
 
         await category.create({
             name,
@@ -60,13 +60,15 @@ export const GetOneCategory = async (req: Request, res: Response, next: NextFunc
 export const PutCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const { name, image } = req.body;
+        const { name } = req.body;
 
         const foundCategory = await category.findByPk(id);
 
         if (!foundCategory) {
             throw CustomErrorHandler.NotFound("Category not found");
         }
+
+        const image = `/uploads/${req.file?.filename}`;
 
         await foundCategory.update({ name, image }) as UpdateCategoryDTO;
 
