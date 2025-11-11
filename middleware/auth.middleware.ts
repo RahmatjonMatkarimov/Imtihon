@@ -11,7 +11,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
         }
 
         const decoded = jwt.verify(token, process.env.ACCES_TOKEN as string) as any;
-        req.user = decoded;
+        (req as any).user = decoded;
 
         next();
     } catch (error: any) {

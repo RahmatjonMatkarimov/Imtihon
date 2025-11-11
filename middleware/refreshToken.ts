@@ -12,12 +12,12 @@ const refreshTokenMiddleware = (req: Request, res: Response, next: NextFunction)
         }
 
         const decoded = jwt.verify(token, process.env.ACCES_TOKEN as string) as jwt.JwtPayload;
-        req.user = decoded;
+        (req as any).user = decoded;
 
         const payload = {
-            username: (req.user as any).username,
-            id: (req.user as any)._id,
-            role: (req.user as any).role,
+            username: ((req as any).user as any).username,
+            id: ((req as any).user as any)._id,
+            role: ((req as any).user as any).role,
         };
 
         const acces = accessToken(payload);

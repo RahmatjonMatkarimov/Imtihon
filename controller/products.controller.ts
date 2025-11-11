@@ -132,7 +132,7 @@ export const DeleteProduct = async (req: Request, res: Response, next: NextFunct
 
 export const Cards = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.user?.id
+        const id = (req as any).user?.id
 
         const cardProducts = await product.findAll({ where: { user_id: id, isCard: true, }, });
 
@@ -173,7 +173,7 @@ export const addcard = async (req: Request, res: Response, next: NextFunction) =
 
 export const likes = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.user?.id
+        const id = (req as any).user?.id
 
         const cardProducts = await product.findAll({ where: { user_id: id, isLike: true, }, });
 

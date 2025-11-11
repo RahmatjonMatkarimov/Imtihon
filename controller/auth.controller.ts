@@ -173,7 +173,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
 };
 export const profile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.user?.id;
+        const id = (req as any).user?.id;
         const foundedUser = await users.findOne({ where: { id } });
 
         if (!foundedUser) {

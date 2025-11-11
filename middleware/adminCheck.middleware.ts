@@ -1,12 +1,7 @@
-import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import CustomErrorHandler from "../error/custom-error-handler.ts";
+import type { NextFunction, Request, Response } from "express";
 
-declare module "express-serve-static-core" {
-    interface Request {
-        user?: jwt.JwtPayload | { username: string; id: string; role: string };
-    }
-}
 
 const adminAuth = (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -17,9 +12,9 @@ const adminAuth = (req: Request, res: Response, next: NextFunction) => {
         }
 
         const decoded = jwt.verify(token, process.env.ACCES_TOKEN as string) as any;
-        req.user = decoded;
+        (req as any).user = decoded as string;
 
-        if (typeof req.user === "object" && req.user.role !== "admin") {
+        if (typeof (req as any).user === "object" && (req as any).user.role !== "admin") {
             throw CustomErrorHandler.BadRequest("You are not admin");
         }
 
