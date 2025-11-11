@@ -109,3 +109,10 @@ error: you are not admin {"errors":[],"status":400}
 [2025-11-11 13:09:43] ERROR: Token not found
 [2025-11-11 13:09:56] INFO: login success ------ user@example.com
 [2025-11-11 13:21:18] INFO: login success ------ user@example.com
+[2025-11-11 15:36:33] ERROR: Token not found
+[2025-11-11 15:36:35] ERROR: Token not found
+[2025-11-11 15:36:47] INFO: login success ------ user@example.com
+[2025-11-11 15:37:04] ERROR: You are not admin
+[2025-11-11 15:37:19] ERROR: You are not admin
+[2025-11-11 15:37:20] ERROR: You are not admin
+[2025-11-11 15:44:03] ERROR: it's not image

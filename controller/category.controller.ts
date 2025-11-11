@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import CustomErrorHandler from "../error/custom-error-handler.ts";
 import { category } from "../model/association.ts";
 import type { CreateCategoryDTO, UpdateCategoryDTO } from "../dto/category.dto.ts";
+import path from "path";
 
 category.sync({ force: false })
 
@@ -11,11 +12,19 @@ export const PostCategory = async (req: Request, res: Response, next: NextFuncti
 
         const image = `/uploads/${req.file?.filename}`;
 
+        if (image) {
+            const allowedExtensions = [".png", ".jpeg", ".jpg", ".webp", ".gif"];
+            const extname = path.extname(image).toLowerCase();
+            if (!allowedExtensions.includes(extname)) {
+                throw CustomErrorHandler.BadRequest("it's not image")
+            }
+        }
+
         await category.create({
             name,
             image,
             owner_id,
-        })  as CreateCategoryDTO;
+        }) as CreateCategoryDTO;
 
         res.status(201).json({
             message: "Category created",
@@ -69,6 +78,14 @@ export const PutCategory = async (req: Request, res: Response, next: NextFunctio
         }
 
         const image = `/uploads/${req.file?.filename}`;
+
+        if (image) {
+            const allowedExtensions = [".png", ".jpeg", ".jpg", ".webp", ".gif"];
+            const extname = path.extname(image).toLowerCase();
+            if (!allowedExtensions.includes(extname)) {
+                throw CustomErrorHandler.BadRequest("it's not image")
+            }
+        }
 
         await foundCategory.update({ name, image }) as UpdateCategoryDTO;
 

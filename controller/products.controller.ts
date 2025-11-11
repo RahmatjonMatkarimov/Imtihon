@@ -3,6 +3,7 @@ import { category, product } from "../model/association.ts";
 import CustomErrorHandler from "../error/custom-error-handler.ts";
 import type { CreateProductDTO, UpdateProductDTO } from "../dto/products.dto.ts";
 import { Op } from "sequelize";
+import path from "path";
 
 product.sync({ force: false })
 
@@ -24,8 +25,14 @@ export const PostProduct = async (req: Request, res: Response, next: NextFunctio
         const images: string[] = [];
 
         if (Array.isArray(req.files)) {
+            const allowedExtensions = [".png", ".jpeg", ".jpg", ".webp", ".gif"];
             req.files.map((file) => {
-                images.push(`/uploads/${file.filename}`);
+                const extname = path.extname(file as any).toLowerCase();
+                if (!allowedExtensions.includes(extname as any)) {
+                    throw CustomErrorHandler.BadRequest("it's not image")
+                }else{
+                    images.push(`/uploads/${file.filename}`);
+                }
             });
         }
 
@@ -96,8 +103,14 @@ export const PutProduct = async (req: Request, res: Response, next: NextFunction
         const images: string[] = [];
 
         if (Array.isArray(req.files)) {
+            const allowedExtensions = [".png", ".jpeg", ".jpg", ".webp", ".gif"];
             req.files.map((file) => {
-                images.push(`/uploads/${file.filename}`);
+                const extname = path.extname(file as any).toLowerCase();
+                if (!allowedExtensions.includes(extname as any)) {
+                    throw CustomErrorHandler.BadRequest("it's not image")
+                }else{
+                    images.push(`/uploads/${file.filename}`);
+                }
             });
         }
 
