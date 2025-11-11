@@ -1,31 +1,28 @@
-interface ErrorDetail {
-  [key: string]: any;
-}
 
 class CustomErrorHandler extends Error {
   status: number;
-  errors: ErrorDetail[];
+  errors: any;
 
-  constructor(status: number, message: string, errors: ErrorDetail[] = []) {
+  constructor(status: number, message: string, errors: any = []) {
     super(message);
     this.status = status;
     this.errors = errors;
-    Object.setPrototypeOf(this, CustomErrorHandler.prototype); 
+    Object.setPrototypeOf(this, CustomErrorHandler.prototype);
   }
 
-  static BadRequest(message: string, errors: ErrorDetail[] = []): CustomErrorHandler {
+  static BadRequest(message: string, errors: any = []): CustomErrorHandler {
     return new CustomErrorHandler(400, message, errors);
   }
 
-  static UnAuthorized(message: string, errors: ErrorDetail[] = []): CustomErrorHandler {
+  static UnAuthorized(message: string, errors: any = []): CustomErrorHandler {
     return new CustomErrorHandler(401, message, errors);
   }
 
-  static NotFound(message: string, errors: ErrorDetail[] = []): CustomErrorHandler {
+  static NotFound(message: string, errors: any = []): CustomErrorHandler {
     return new CustomErrorHandler(404, message, errors);
   }
 
-  static Forbidden(message: string, errors: ErrorDetail[] = []): CustomErrorHandler {
+  static Forbidden(message: string, errors: any = []): CustomErrorHandler {
     return new CustomErrorHandler(403, message, errors);
   }
 }

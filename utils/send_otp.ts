@@ -1,18 +1,20 @@
 import nodemailer from "nodemailer";
 import logger from "./logger.ts";
+import { config } from "dotenv";
+config()
 
 const sendOtp = async (email: string, otp: string | number): Promise<void> => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "rahmatjon974@gmail.com",
+        user: process.env.COMPANY,
         pass: process.env.APP_PASS as string,
       },
     });
 
     await transporter.sendMail({
-      from: "rahmatjon974@gmail.com",
+      from: process.env.COMPANY,
       to: email,
       subject: "devBook tasdiqlash kodi",
       text: `tasdiqlash kodi: ${otp}`,

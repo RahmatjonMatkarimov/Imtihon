@@ -16,7 +16,7 @@ const refreshTokenMiddleware = (req: Request, res: Response, next: NextFunction)
 
         const payload = {
             username: ((req as any).user as any).username,
-            id: ((req as any).user as any)._id,
+            id: ((req as any).user as any).id,
             role: ((req as any).user as any).role,
         };
 

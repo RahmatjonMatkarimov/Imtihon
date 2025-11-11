@@ -14,6 +14,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         const { email, password, username } = req.body;
 
         const foundedUser = await users.findOne({ where: { email } });
+
         if (foundedUser) {
             throw CustomErrorHandler.BadRequest("such user already exists");
         }
@@ -48,15 +49,17 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 export const verify = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, otp } = req.body;
+        const time = Date.now();
+
+        if (!email || !otp) {
+            throw CustomErrorHandler.BadRequest('email or otm required')
+        }
 
         const foundedUser = await users.findOne({ where: { email }, raw: false });
 
         if (!foundedUser?.dataValues) {
             throw CustomErrorHandler.NotFound("user not found");
         }
-        console.log(foundedUser?.dataValues);
-
-        const time = Date.now();
 
         if (!foundedUser?.dataValues.otpTime || foundedUser.dataValues.otpTime < time) {
             throw CustomErrorHandler.BadRequest("otp expired");
@@ -85,6 +88,11 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
 export const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body;
+
+        if (!email || !password) {
+            throw CustomErrorHandler.BadRequest("email, password is required")
+        }
+
         const foundedUser = await users.findOne({ where: { email }, raw: false });
 
         if (!foundedUser?.dataValues) {
@@ -146,6 +154,11 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body;
+
+        if (!email || !password) {
+            throw CustomErrorHandler.BadRequest("email, password is required")
+        }
+
         const foundedUser = await users.findOne({ where: { email } });
 
         if (!foundedUser) {
@@ -174,6 +187,11 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
 export const profile = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = (req as any).user?.id;
+
+        if (!id) {
+            throw CustomErrorHandler.UnAuthorized("login required")
+        }
+
         const foundedUser = await users.findOne({ where: { id } });
 
         if (!foundedUser) {

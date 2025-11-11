@@ -10,5 +10,5 @@ authRouter.post("/verify", verify);
 authRouter.post("/login", login);
 authRouter.post("/logout", auth, logout);
 authRouter.post("/reset-password", auth, resetPassword);
-authRouter.get("/refresh-token", auth, refreshTokenMiddleware);
+authRouter.get("/refresh-token", refreshTokenMiddleware);
 authRouter.get("/profile", auth, profile);

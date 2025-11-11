@@ -1,11 +1,7 @@
 import jwt from "jsonwebtoken";
 import logger from "./logger.ts";
 
-interface JwtPayload {
-  [key: string]: any;
-}
-
-export const accessToken = (payload: JwtPayload): string => {
+export const accessToken = (payload: any): string => {
   try {
     const secret = process.env.ACCES_TOKEN as string;
     if (!secret) throw new Error("ACCESS_TOKEN secret not defined");
@@ -17,7 +13,7 @@ export const accessToken = (payload: JwtPayload): string => {
   }
 };
 
-export const refreshToken = (payload: JwtPayload): string => {
+export const refreshToken = (payload: any): string => {
   try {
     const secret = process.env.REFRESH_TOKEN as string;
     if (!secret) throw new Error("REFRESH_TOKEN secret not defined");

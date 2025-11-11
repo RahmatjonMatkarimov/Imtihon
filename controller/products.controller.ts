@@ -67,15 +67,16 @@ export const GetOneProduct = async (req: Request, res: Response, next: NextFunct
         const { id } = req.params;
 
         const foundProduct = await product.findByPk(id);
-        const products = await category.findByPk(foundProduct?.dataValues.category_id);
 
         if (!foundProduct) {
             throw CustomErrorHandler.NotFound("Product not found");
         }
 
+        const products = await category.findByPk(foundProduct?.dataValues.category_id);
+
         res.status(200).json({
             data: foundProduct,
-            products
+            products: products || []
         });
     } catch (err) {
         next(err);
@@ -85,6 +86,7 @@ export const GetOneProduct = async (req: Request, res: Response, next: NextFunct
 export const PutProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
+
         const foundProduct = await product.findByPk(id);
 
         if (!foundProduct) {
@@ -99,7 +101,7 @@ export const PutProduct = async (req: Request, res: Response, next: NextFunction
             });
         }
 
-        await foundProduct.update({...req.body, images}) as UpdateProductDTO;
+        await foundProduct.update({ ...req.body, images }) as UpdateProductDTO;
 
         res.status(200).json({
             message: "Product updated",
@@ -133,6 +135,10 @@ export const DeleteProduct = async (req: Request, res: Response, next: NextFunct
 export const Cards = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = (req as any).user?.id
+
+        if (!id) {
+            throw CustomErrorHandler.UnAuthorized("login required")
+        }
 
         const cardProducts = await product.findAll({ where: { user_id: id, isCard: true, }, });
 
@@ -174,6 +180,10 @@ export const addcard = async (req: Request, res: Response, next: NextFunction) =
 export const likes = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = (req as any).user?.id
+
+        if (!id) {
+            throw CustomErrorHandler.UnAuthorized("login required")
+        }
 
         const cardProducts = await product.findAll({ where: { user_id: id, isLike: true, }, });
 
@@ -236,7 +246,8 @@ export const search = async (req: Request, res: Response, next: NextFunction) =>
 export const topRating = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const products = await product.findAll({
-            order: [['rating', 'DESC']]
+            order: [['rating', 'DESC']],
+            limit: 10
         });
 
         res.status(200).json({

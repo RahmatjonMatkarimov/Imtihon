@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import CustomErrorHandler from "../error/custom-error-handler.ts";
 import type { NextFunction, Request, Response } from "express";
 
-
 const adminAuth = (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.cookies?.AccessToken;
