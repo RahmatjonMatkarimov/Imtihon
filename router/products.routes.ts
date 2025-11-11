@@ -14,7 +14,7 @@ import {
 } from "../controller/products.controller.ts";
 import upload from "../utils/file_upload.ts";
 import auth from "../middleware/auth.middleware.ts";
-import adminAuth from "../middleware/auth.middleware.ts";
+import adminAuth from "../middleware/adminCheck.middleware.ts";
 
 export const ProductRouter = Router();
 
