@@ -1,14 +1,8 @@
-import { Router } from "express";
-import {
-    PostCategory,
-    GetCategory,
-    GetOneCategory,
-    PutCategory,
-    DeleteCategory,
-} from "../controller/category.controller.ts";
+import { PostCategory, GetCategory, GetOneCategory, PutCategory, DeleteCategory} from "../controller/category.controller.ts";
 import adminAuth from "../middleware/adminCheck.middleware.ts";
 import auth from "../middleware/auth.middleware.ts";
 import upload from "../utils/file_upload.ts";
+import { Router } from "express";
 
 export const categoryRouter = Router();
 

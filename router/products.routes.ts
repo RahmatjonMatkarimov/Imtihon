@@ -1,20 +1,8 @@
-import { Router } from "express";
-import {
-  PostProduct,
-  GetProducts,
-  GetOneProduct,
-  PutProduct,
-  DeleteProduct,
-  likes,
-  Cards,
-  search,
-  addLikesProduct,
-  addcard,
-  topRating,
-} from "../controller/products.controller.ts";
-import upload from "../utils/file_upload.ts";
-import auth from "../middleware/auth.middleware.ts";
+import { PostProduct, GetProducts, GetOneProduct, PutProduct, DeleteProduct, likes, Cards, search, addLikesProduct, addcard, topRating, } from "../controller/products.controller.ts";
 import adminAuth from "../middleware/adminCheck.middleware.ts";
+import auth from "../middleware/auth.middleware.ts";
+import upload from "../utils/file_upload.ts";
+import { Router } from "express";
 
 export const ProductRouter = Router();
 
