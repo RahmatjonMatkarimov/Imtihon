@@ -16,11 +16,18 @@ export const PostProduct = async (req: Request, res: Response, next: NextFunctio
             color,
             size,
             rating,
-            images,
             user_id,
             paymentType,
             category_id,
         } = req.body;
+
+        const images: string[] = [];
+
+        if (Array.isArray(req.files)) {
+            req.files.forEach((file) => {
+                images.push(file.filename);
+            });
+        }
 
         const newProduct = await product.create({
             name,
@@ -63,7 +70,7 @@ export const GetOneProduct = async (req: Request, res: Response, next: NextFunct
         const products = await category.findByPk(foundProduct?.dataValues.category_id);
         console.log(foundProduct);
         console.log(products);
-        
+
 
         if (!foundProduct) {
             throw CustomErrorHandler.NotFound("Product not found");
@@ -145,7 +152,7 @@ export const addcard = async (req: Request, res: Response, next: NextFunction) =
             throw CustomErrorHandler.NotFound("Product not found");
         }
 
-        if (!isCard || typeof isCard !== "boolean") {
+        if (typeof isCard !== "boolean") {
             throw CustomErrorHandler.NotFound("isCard is not a boolean or not found");
         }
 
@@ -186,7 +193,7 @@ export const addLikesProduct = async (req: Request, res: Response, next: NextFun
             throw CustomErrorHandler.NotFound("Product not found");
         }
 
-        if (!isLike || typeof isLike !== "boolean") {
+        if (typeof isLike !== "boolean") {
             throw CustomErrorHandler.NotFound("isLike is not a boolean or not found");
         }
 
