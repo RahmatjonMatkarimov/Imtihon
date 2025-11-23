@@ -1,45 +1,38 @@
 import { Role } from 'src/common/enums/role.enum';
-import { Column, Model, Table, DataType } from "sequelize-typescript";
+import { Column, Model, Table, DataType, BelongsToMany, HasMany } from "sequelize-typescript";
+import { Group } from 'src/groups/entities/group.entity';
+import { GroupStudent } from 'src/groups/entities/group-student.entity';
 
 @Table({ tableName: 'Users' })
 export class Auth extends Model {
-
-    @Column({
-        allowNull: false
-    })
+    @Column({ allowNull: false })
     username: string;
 
-    @Column({
-        allowNull: false
-    })
+    @Column({ allowNull: false, unique: true })
     email: string;
 
-    @Column({
-        allowNull: false
-    })
+    @Column({ allowNull: false })
     password: string;
 
     @Column({
         type: DataType.ENUM(...Object.values(Role)),
         allowNull: false,
-        defaultValue: Role.User,
+        defaultValue: Role.Student,
     })
     role: Role;
 
-    @Column({
-        type: DataType.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-    })
+    @Column({ type: DataType.BOOLEAN, defaultValue: false })
     isVerify: boolean;
 
-    @Column({
-        allowNull: true
-    })
+    @Column({ allowNull: true })
     otp: string;
 
-    @Column({
-        allowNull: true
-    })
+    @Column({ allowNull: true })
     otp_time: string;
+
+    @HasMany(() => Group, 'teacher_id')
+    teachingGroups: Group[];
+
+    @BelongsToMany(() => Group, () => GroupStudent)
+    groups: Group[];
 }

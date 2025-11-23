@@ -5,6 +5,7 @@ import { Auth } from './entities/auth.entity';
 import * as bcrypt from 'bcrypt';
 import * as nodemailer from 'nodemailer'
 import { JwtService } from '@nestjs/jwt';
+import { Group } from 'src/groups/entities/group.entity';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
   })
   constructor(@InjectModel(Auth) private authModel: typeof Auth, private jwtService: JwtService) { }
 
-  async register(data: RegisterDto) {
+  async register(data: RegisterDto, role: string) {
     const { email, username, password } = data
     const user = await this.authModel.findOne({ where: { email } })
 
@@ -30,7 +31,7 @@ export class AuthService {
       username,
       email,
       password: await bcrypt.hash(password, 12),
-      role: "admin",
+      role: role,
       otp,
       otp_time
     }
@@ -49,7 +50,13 @@ export class AuthService {
 
   async login(data: LoginDto) {
     const { email, password } = data;
-    const user = await this.authModel.findOne({ where: { email } });
+    const user = await this.authModel.findOne({
+      where: { email },
+      include: [
+        { model: Group, as: 'teachingGroups' }, 
+        { model: Group, as: 'groups' }, 
+      ],
+    });
 
     if (!user || !user.dataValues.password) throw new BadRequestException("Email yoki parol noto‘g‘ri")
     const isMatch = await bcrypt.compare(password, user.dataValues.password);

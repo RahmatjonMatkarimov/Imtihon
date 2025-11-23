@@ -11,13 +11,28 @@ import { Role } from 'src/common/enums/role.enum';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Post('ragister')
-  register(@Body() register: RegisterDto) {
-    return this.authService.register(register);
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Post('register/admin')
+  admin(@Body() register: RegisterDto) {
+    return this.authService.register(register, Role.Admin);
   }
 
-  // @UseGuards(AuthGuard,RolesGuard)
-  // @Roles(Role.User)
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Post('register/teacher')
+  teacher(@Body() register: RegisterDto) {
+    return this.authService.register(register, Role.Teacher);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Post('register/student')
+  student(@Body() register: RegisterDto) {
+    return this.authService.register(register, Role.Student);
+  }
+
   @Post('login')
   login(@Body() data: LoginDto) {
     return this.authService.login(data);
