@@ -19,9 +19,9 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('groups')
-@UseGuards(AuthGuard, RolesGuard) 
+@UseGuards(AuthGuard, RolesGuard)
 export class GroupsController {
-  constructor(private readonly groupsService: GroupsService) {}
+  constructor(private readonly groupsService: GroupsService) { }
 
   @Post()
   @Roles(Role.Admin)
@@ -50,6 +50,7 @@ export class GroupsController {
     return this.groupsService.removeStudent(groupId, studentId);
   }
 
+  @Roles(Role.Admin, Role.Teacher)
   @Get()
   async findAll() {
     return this.groupsService.findAll();
@@ -82,7 +83,7 @@ export class GroupsController {
   }
 
   @Get('student/:studentId')
-  @Roles(Role.Admin, Role.Teacher, Role.Student) 
+  @Roles(Role.Admin, Role.Teacher, Role.Student)
   async getStudentGroups(@Param('studentId', ParseIntPipe) studentId: number) {
     return this.groupsService.getStudentGroups(studentId);
   }

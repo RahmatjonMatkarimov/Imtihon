@@ -43,6 +43,7 @@ export class AuthController {
     return this.authService.verify(verify);
   }
 
+  @UseGuards(AuthGuard)
   @Post('resetPassword')
   reset_password(@Body() resetPassword: ResetPasswordDto) {
     return this.authService.reset_password(resetPassword);

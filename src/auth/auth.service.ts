@@ -99,6 +99,7 @@ export class AuthService {
     };
   }
 
+  
   async reset_password(data: ResetPasswordDto) {
     const { email, password } = data;
     const user = await this.authModel.findOne({ where: { email } });
