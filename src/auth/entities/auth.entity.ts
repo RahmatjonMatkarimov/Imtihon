@@ -1,3 +1,4 @@
+import { Role } from 'src/common/enums/role.enum';
 import { Column, Model, Table, DataType } from "sequelize-typescript";
 
 @Table({ tableName: 'Users' })
@@ -19,14 +20,16 @@ export class Auth extends Model {
     password: string;
 
     @Column({
-        allowNull: false
+        type: DataType.ENUM(...Object.values(Role)),
+        allowNull: false,
+        defaultValue: Role.User,
     })
-    role: string;
+    role: Role;
 
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false,
-        defaultValue: false  
+        defaultValue: false
     })
     isVerify: boolean;
 

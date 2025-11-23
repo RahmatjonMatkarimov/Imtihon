@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { loginDto, registerDto, resetPasswordDto, verifyDto } from './dto/create-auth.dto';
+import { LoginDto, RegisterDto, ResetPasswordDto, VerifyDto } from './dto/create-auth.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Auth } from './entities/auth.entity';
 import * as bcrypt from 'bcrypt';
@@ -17,7 +17,7 @@ export class AuthService {
   })
   constructor(@InjectModel(Auth) private authModel: typeof Auth, private jwtService: JwtService) { }
 
-  async register(data: registerDto) {
+  async register(data: RegisterDto) {
     const { email, username, password } = data
     const user = await this.authModel.findOne({ where: { email } })
 
@@ -47,7 +47,7 @@ export class AuthService {
     return { message: "emailga tasdiqlash codi yuborildi", otp };
   }
 
-  async login(data: loginDto) {
+  async login(data: LoginDto) {
     const { email, password } = data;
     const user = await this.authModel.findOne({ where: { email } });
 
@@ -73,7 +73,7 @@ export class AuthService {
     };
   }
 
-  async verify(data: verifyDto) {
+  async verify(data: VerifyDto) {
     const { email, otp } = data;
 
     const user = await this.authModel.findOne({ where: { email } })
@@ -92,7 +92,7 @@ export class AuthService {
     };
   }
 
-  async reset_password(data: resetPasswordDto) {
+  async reset_password(data: ResetPasswordDto) {
     const { email, password } = data;
     const user = await this.authModel.findOne({ where: { email } });
     if (!user) throw new BadRequestException("Foydalanuvchi topilmadi");
