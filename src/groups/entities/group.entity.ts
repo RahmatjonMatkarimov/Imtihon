@@ -8,6 +8,24 @@ export class Group extends Model {
     title: string;
 
     @Column({ allowNull: false })
+    teacher_phone: string;
+
+    @Column({ allowNull: false })
+    teacher_Image: string;
+
+    @Column({ allowNull: false })
+    lesson_days: string;
+
+    @Column({ allowNull: false })
+    lesson_StartTime: string;
+
+    @Column({ allowNull: false })
+    lesson_EndTime: string;
+
+    @Column({ allowNull: false })
+    orientation: string;
+
+    @Column({ allowNull: false })
     teacher_id: number;
 
     @BelongsTo(() => Auth, 'teacher_id')

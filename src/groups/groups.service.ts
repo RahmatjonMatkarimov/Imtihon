@@ -16,21 +16,26 @@ export class GroupsService {
   constructor(
     @InjectModel(Group) private readonly groupModel: typeof Group,
     @InjectModel(Auth) private readonly authModel: typeof Auth,
-  ) {}
+  ) { }
 
   async create(createGroupDto: CreateGroupDto): Promise<{ message: string }> {
-    const { title, teacher_id } = createGroupDto;
-
+    const { teacher_id, title, teacher_phone, lesson_days, teacher_Image, lesson_EndTime, lesson_StartTime } = createGroupDto;
     const teacher = await this.authModel.findByPk(teacher_id);
-    if (!teacher) {
-      throw new NotFoundException(`Teacher ID ${teacher_id} topilmadi`);
-    }
+    if (!teacher) throw new NotFoundException(`Teacher ID ${teacher_id} topilmadi`);
+    if (teacher.role !== Role.Teacher && teacher.role !== Role.Admin) throw new BadRequestException('Guruh yaratish faqat Teacher yoki Admin uchun ruxsat etilgan');
+    const groupData = {
+      title,
+      teacher_id,
+      teacher_phone,
+      teacher_Image,
+      lesson_days,
+      lesson_StartTime,
+      lesson_EndTime,
+      orientation,
+    };
 
-    if (teacher.role !== Role.Teacher && teacher.role !== Role.Admin) {
-      throw new BadRequestException('Guruh yaratish faqat Teacher yoki Admin uchun ruxsat etilgan');
-    }
+    await this.groupModel.create(groupData);
 
-    await this.groupModel.create({ title, teacher_id });
     return { message: 'Guruh muvaffaqiyatli yaratildi' };
   }
 
