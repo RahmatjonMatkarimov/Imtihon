@@ -1,25 +1,42 @@
-import { Column, Model, Table } from "sequelize-typescript";
+import { Column, Model, Table, DataType } from "sequelize-typescript";
 
 @Table({ tableName: 'Users' })
 export class Auth extends Model {
-    @Column
+
+    @Column({
+        allowNull: false
+    })
     username: string;
 
-    @Column
+    @Column({
+        allowNull: false
+    })
     email: string;
 
-    @Column
+    @Column({
+        allowNull: false
+    })
     password: string;
 
-    @Column
+    @Column({
+        allowNull: false
+    })
     role: string;
 
-    @Column
+    @Column({
+        type: DataType.BOOLEAN,
+        allowNull: false,
+        defaultValue: false  
+    })
     isVerify: boolean;
 
-    @Column
+    @Column({
+        allowNull: true
+    })
     otp: string;
 
-    @Column
+    @Column({
+        allowNull: true
+    })
     otp_time: string;
 }
