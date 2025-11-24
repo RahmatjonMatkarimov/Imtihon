@@ -65,10 +65,10 @@ export class GroupService {
   async findOne(id: number) {
     const group = await this.groupModel.findByPk(id, {
       include: [
-        { model: Teacher, attributes: ['id', 'username', 'phone', 'img'] },
+        { model: Teacher, attributes: ['id', 'username', 'email', 'phone', 'img'] },
         {
           model: Student,
-          attributes: ['id', 'username', 'phone', 'img'],
+          attributes: ['id', 'username', 'email', 'phone', 'img'],
           through: {
             attributes: [],
             where: {
