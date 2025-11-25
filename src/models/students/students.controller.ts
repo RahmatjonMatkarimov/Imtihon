@@ -1,21 +1,25 @@
 import {
   Controller, Post, Body, UploadedFile, UseInterceptors,
-  Get, Param, Patch, Delete, BadRequestException,
-  Query
+  Get, Param, Patch, Delete, Query, BadRequestException
 } from '@nestjs/common';
-
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiConsumes } from '@nestjs/swagger';
 
+@ApiTags('Students')
 @Controller('students')
 export class StudentController {
-  constructor(private readonly studentService: StudentsService) { }
+  constructor(private readonly studentService: StudentsService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Yangi talaba yaratish' })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 201, description: 'Talaba yaratildi' })
+  @ApiResponse({ status: 400, description: 'Foydalanuvchi allaqachon mavjud yoki fayl noto‘g‘ri' })
   @UseInterceptors(
     FileInterceptor('img', {
       storage: diskStorage({
@@ -36,31 +40,41 @@ export class StudentController {
     }),
   )
   create(
-    @Body() createAdminDto: CreateStudentDto,
+    @Body() createStudentDto: CreateStudentDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     const img = file ? `/uploads/${file.filename}` : '';
-    return this.studentService.create(createAdminDto, img);
+    return this.studentService.create(createStudentDto, img);
   }
 
   @Get()
-  async findAll(
+  @ApiOperation({ summary: 'Talabalarni listlash' })
+  @ApiQuery({ name: 'search', required: false })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  findAll(
     @Query('search') search?: string,
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
   ) {
-    const pageNumber = parseInt(page, 10);
-    const limitNumber = parseInt(limit, 10);
-
-    return this.studentService.findAll(search, pageNumber, limitNumber);
+    return this.studentService.findAll(search, parseInt(page), parseInt(limit));
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Talabani ID bo‘yicha olish' })
+  @ApiParam({ name: 'id', example: 1 })
+  @ApiResponse({ status: 200, description: 'Talaba topildi' })
+  @ApiResponse({ status: 404, description: 'Talaba topilmadi' })
   findOne(@Param('id') id: string) {
     return this.studentService.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Talabani yangilash' })
+  @ApiParam({ name: 'id', example: 1 })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 200, description: 'Talaba yangilandi' })
+  @ApiResponse({ status: 404, description: 'Talaba topilmadi' })
   @UseInterceptors(
     FileInterceptor('img', {
       storage: diskStorage({
@@ -82,14 +96,18 @@ export class StudentController {
   )
   update(
     @Param('id') id: string,
-    @Body() updateAdminDto: UpdateStudentDto,
+    @Body() updateStudentDto: UpdateStudentDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     const img = file ? `/uploads/${file.filename}` : '';
-    return this.studentService.update(+id, updateAdminDto, img);
+    return this.studentService.update(+id, updateStudentDto, img);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Talabani o‘chirish' })
+  @ApiParam({ name: 'id', example: 1 })
+  @ApiResponse({ status: 200, description: 'Talaba o‘chirildi' })
+  @ApiResponse({ status: 404, description: 'Talaba topilmadi' })
   remove(@Param('id') id: string) {
     return this.studentService.remove(+id);
   }
