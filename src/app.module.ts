@@ -1,23 +1,25 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './models/auth/auth.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Auth } from './auth/entities/auth.entity';
-import { BotsModule } from './bots/bots.module';
-import { Bot } from './bots/entities/bot.entity';
-import { StudentsModule } from './students/students.module';
-import { AdminsModule } from './admins/admins.module';
-import { Admin } from './admins/entities/admin.entity';
+import { Auth } from './models/auth/entities/auth.entity';
+import { BotsModule } from './models/bots/bots.module';
+import { Bot } from './models/bots/entities/bot.entity';
+import { StudentsModule } from './models/students/students.module';
+import { AdminsModule } from './models/admins/admins.module';
+import { Admin } from './models/admins/entities/admin.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { TeacherModule } from './teachers/teachers.module';
-import { Teacher } from './teachers/entities/teacher.entity';
-import { GroupModule } from './group/group.module';
-import { Group } from './group/entities/group.entity';
-import { ReportModule } from './report/report.module';
-import { GroupStudent } from './group/entities/group-student.entity';
-import { Student } from './students/entities/student.entity';
-import { PaymentsModule } from './payments/payments.module';
+import { TeacherModule } from './models/teachers/teachers.module';
+import { Teacher } from './models/teachers/entities/teacher.entity';
+import { GroupModule } from './models/group/group.module';
+import { Group } from './models/group/entities/group.entity';
+import { ReportModule } from './models/report/report.module';
+import { GroupStudent } from './models/group/entities/group-student.entity';
+import { Student } from './models/students/entities/student.entity';
+import { PaymentsModule } from './models/payments/payments.module';
+import { AttendanceModule } from './models/attendance/attendance.module';
+import { Attendance } from './models/attendance/entities/attendance.entity';
 
 @Module({
   imports: [
@@ -32,7 +34,7 @@ import { PaymentsModule } from './payments/payments.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      models: [Auth, Bot, Admin, Teacher, Student, Group, GroupStudent],
+      models: [Auth, Bot, Admin, Teacher, Student, Group, GroupStudent, Attendance],
       autoLoadModels: true,
       synchronize: true,
       logging: false,
@@ -50,6 +52,7 @@ import { PaymentsModule } from './payments/payments.module';
     GroupModule,
     ReportModule,
     PaymentsModule,
+    AttendanceModule,
   ],
 })
 export class AppModule { }
