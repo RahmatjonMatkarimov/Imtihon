@@ -20,6 +20,7 @@ import { Student } from './models/students/entities/student.entity';
 import { PaymentsModule } from './models/payments/payments.module';
 import { AttendanceModule } from './models/attendance/attendance.module';
 import { Attendance } from './models/attendance/entities/attendance.entity';
+import { Payment } from './models/payments/entities/payment.entity';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { Attendance } from './models/attendance/entities/attendance.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      models: [Auth, Bot, Admin, Teacher, Student, Group, GroupStudent, Attendance],
+      models: [Auth, Bot, Admin, Teacher, Student, Group, GroupStudent, Attendance,Payment],
       autoLoadModels: true,
       synchronize: true,
       logging: false,
