@@ -5,6 +5,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { AdminsModule } from './models/admins/admins.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { UsersModule } from './models/users/users.module';
+import { CategoryModule } from './models/category/category.module';
+import { ProductsModule } from './models/products/products.module';
 
 @Module({
   imports: [
@@ -30,6 +33,9 @@ import { join } from 'path';
     }),
     AuthModule,
     AdminsModule,
+    UsersModule,
+    CategoryModule,
+    ProductsModule,
   ],
 })
 export class AppModule { }

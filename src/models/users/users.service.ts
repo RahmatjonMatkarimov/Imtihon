@@ -1,24 +1,24 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Role } from 'src/common/enums/role.enum';
-import { Admin } from './entities/admin.entity';
 import * as bcrypt from 'bcrypt';
 import { InjectModel } from '@nestjs/sequelize';
 import { Auth } from 'src/models/auth/entities/auth.entity';
 import { Op } from 'sequelize';
+import { User } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
-export class AdminsService {
+export class UsersService {
   constructor(
-    @InjectModel(Admin) private adminModel: typeof Admin,
+    @InjectModel(User) private UserModel: typeof User,
     @InjectModel(Auth) private authModel: typeof Auth,
   ) { }
 
-  async create(data: CreateAdminDto) {
+  async create(data: CreateUserDto) {
     const { email, username, password } = data;
 
-    const existingUser = await this.adminModel.findOne({ where: { email } });
+    const existingUser = await this.UserModel.findOne({ where: { email } });
     const existingUserAuth = await this.authModel.findOne({ where: { email } });
     if (existingUser || existingUserAuth) {
       throw new BadRequestException("Foydalanuvchi allaqachon mavjud");
@@ -26,19 +26,19 @@ export class AdminsService {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const newAdmin = await this.adminModel.create({
+    const newUser = await this.UserModel.create({
       username,
       email,
       password: hashedPassword,
-      role: Role.Admin,
+      role: Role.User,
     });
 
     await this.authModel.create({
       email,
       username,
       password: hashedPassword,
-      role: Role.Admin,
-      user_id: newAdmin.dataValues.id,
+      role: Role.User,
+      user_id: newUser.dataValues.id,
     });
 
 
@@ -49,7 +49,7 @@ export class AdminsService {
     search?: string,
     page: number = 1,
     limit: number = 10,
-  ): Promise<{ data: Admin[]; total: number; page: number; limit: number }> {
+  ): Promise<{ data: User[]; total: number; page: number; limit: number }> {
     const offset = (page - 1) * limit;
 
     const whereCondition = search ? {
@@ -60,7 +60,7 @@ export class AdminsService {
       ],
     } : {}
 
-    const { rows, count } = await this.adminModel.findAndCountAll({
+    const { rows, count } = await this.UserModel.findAndCountAll({
       where: whereCondition,
       limit,
       offset,
@@ -76,40 +76,40 @@ export class AdminsService {
   }
 
   async findOne(id: number) {
-    const admin = await this.adminModel.findByPk(id);
-    if (!admin) {
-      throw new NotFoundException(`Admin topilmadi`);
+    const User = await this.UserModel.findByPk(id);
+    if (!User) {
+      throw new NotFoundException(`User topilmadi`);
     }
-    return admin;
+    return User;
   }
 
-  async update(id: number, updateAdminDto: UpdateAdminDto, img?: string) {
-    const admin = await this.adminModel.findByPk(id);
-    if (!admin) {
-      throw new NotFoundException(`Admin topilmadi`);
+  async update(id: number, updateUserDto: UpdateUserDto, img?: string) {
+    const User = await this.UserModel.findByPk(id);
+    if (!User) {
+      throw new NotFoundException(`User topilmadi`);
     }
 
-    if (updateAdminDto.password) {
-      updateAdminDto.password = await bcrypt.hash(updateAdminDto.password, 12);
+    if (updateUserDto.password) {
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 12);
       await this.authModel.update(
-        { password: updateAdminDto.password },
+        { password: updateUserDto.password },
         { where: { user_id: id } },
       );
     }
 
-    await admin.update(updateAdminDto);
-    return { message: "Admin yangilandi", admin };
+    await User.update(updateUserDto);
+    return { message: "User yangilandi", User };
   }
 
   async remove(id: number) {
-    const admin = await this.adminModel.findByPk(id);
-    if (!admin) {
-      throw new NotFoundException(`Admin topilmadi`);
+    const User = await this.UserModel.findByPk(id);
+    if (!User) {
+      throw new NotFoundException(`User topilmadi`);
     }
 
     await this.authModel.destroy({ where: { user_id: id } });
-    await admin.destroy();
+    await User.destroy();
 
-    return { message: "Admin o'chirildi" };
+    return { message: "User o'chirildi" };
   }
 }

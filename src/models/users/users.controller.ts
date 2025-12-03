@@ -3,9 +3,6 @@ import {
   Get, Param, Patch, Delete,
   Query,
 } from '@nestjs/common';
-import { AdminsService } from './admins.service';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -16,11 +13,14 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
-@ApiTags('admins')
-@Controller('admins')
-export class AdminsController {
-  constructor(private readonly adminsService: AdminsService) {}
+@ApiTags('users')
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @ApiOperation({ summary: 'Yangi admin yaratish' })
@@ -37,8 +37,8 @@ export class AdminsController {
   })
   @ApiResponse({ status: 201, description: 'Admin muvaffaqiyatli yaratildi' })
   @ApiBadRequestResponse({ description: 'Noto\'g\'ri ma\'lumot yoki foydalanuvchi allaqachon mavjud' })
-  create(@Body() createAdminDto: CreateAdminDto) {
-    return this.adminsService.create(createAdminDto);
+  create(@Body() createAdminDto: CreateUserDto) {
+    return this.usersService.create(createAdminDto);
   }
 
   @Get()
@@ -55,7 +55,7 @@ export class AdminsController {
     const pageNum = parseInt(page, 10) || 1;
     const limitNum = parseInt(limit, 10) || 10;
 
-    return this.adminsService.findAll(search, pageNum, limitNum);
+    return this.usersService.findAll(search, pageNum, limitNum);
   }
 
   @Get(':id')
@@ -64,7 +64,7 @@ export class AdminsController {
   @ApiResponse({ status: 200, description: 'Admin topildi' })
   @ApiNotFoundResponse({ description: 'Admin topilmadi' })
   findOne(@Param('id') id: string) {
-    return this.adminsService.findOne(+id);
+    return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
@@ -84,9 +84,9 @@ export class AdminsController {
   @ApiNotFoundResponse({ description: 'Admin topilmadi' })
   update(
     @Param('id') id: string,
-    @Body() updateAdminDto: UpdateAdminDto,
+    @Body() updateAdminDto: UpdateUserDto,
   ) {
-    return this.adminsService.update(+id, updateAdminDto);
+    return this.usersService.update(+id, updateAdminDto);
   }
 
   @Delete(':id')
@@ -95,6 +95,6 @@ export class AdminsController {
   @ApiResponse({ status: 200, description: 'Admin o\'chirildi' })
   @ApiNotFoundResponse({ description: 'Admin topilmadi' })
   remove(@Param('id') id: string) {
-    return this.adminsService.remove(+id);
+    return this.usersService.remove(+id);
   }
 }
