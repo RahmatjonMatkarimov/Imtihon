@@ -17,7 +17,7 @@ export class Product extends Model<Product> {
     @Column({ type: DataType.INTEGER, allowNull: false })
     price: number;
 
-    @Column({ type: DataType.TEXT, allowNull: false })
+    @Column({ type: DataType.STRING, allowNull: false })
     description: string;
 
     @Column({ type: DataType.JSONB, allowNull: true })
