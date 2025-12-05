@@ -1,14 +1,42 @@
-import { Column, Model, Table } from "sequelize-typescript";
+import {
+    Column,
+    DataType,
+    Model,
+    Table,
+    ForeignKey,
+    BelongsTo,
+} from "sequelize-typescript";
+import { Category } from "src/models/category/entities/category.entity";
+import { User } from "src/models/users/entities/user.entity";
 
-@Table({ tableName: "products" })
-export class Product extends Model {
-    @Column({
-        allowNull: false
-    })
-    title: string
+@Table({ tableName: "products", timestamps: true })
+export class Product extends Model<Product> {
+    @Column({ type: DataType.STRING, allowNull: false })
+    title: string;
 
-    @Column({
-        allowNull: false
-    })
-    prise: number
+    @Column({ type: DataType.INTEGER, allowNull: false })
+    price: number;
+
+    @Column({ type: DataType.TEXT, allowNull: false })
+    description: string;
+
+    @Column({ type: DataType.JSONB, allowNull: true })
+    attributes: any;
+
+    @Column({ type: DataType.STRING, allowNull: false })
+    img: string;
+
+    @ForeignKey(() => User)
+    @Column({ type: DataType.INTEGER, allowNull: false })
+    owner_id: number;
+
+    @BelongsTo(() => User)
+    owner: User;
+
+    @ForeignKey(() => Category)
+    @Column({ type: DataType.INTEGER, allowNull: false })
+    category_id: number;
+
+    @BelongsTo(() => Category)
+    category: Category;
 }

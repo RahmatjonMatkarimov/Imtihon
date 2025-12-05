@@ -1,5 +1,6 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, HasMany } from 'sequelize-typescript';
 import { Role } from '../../../common/enums/role.enum';
+import { Product } from 'src/models/products/entities/product.entity';
 
 @Table({ tableName: 'admins', timestamps: true })
 export class Admin extends Model {
@@ -29,4 +30,6 @@ export class Admin extends Model {
   })
   role: Role;
 
+  @HasMany(() => Product)
+  products: Product[];
 }

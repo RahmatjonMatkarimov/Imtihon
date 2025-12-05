@@ -1,4 +1,5 @@
-import { Column, Model, Table, CreatedAt, UpdatedAt } from 'sequelize-typescript';
+import { Column, Model, Table, CreatedAt, UpdatedAt, HasMany } from 'sequelize-typescript';
+import { Product } from 'src/models/products/entities/product.entity';
 
 @Table({ tableName: 'categories', timestamps: true })
 export class Category extends Model {
@@ -10,5 +11,8 @@ export class Category extends Model {
   @Column({
     allowNull: false,
   })
-  img: string; 
+  img: string;
+
+  @HasMany(() => Product)
+  products: Product[];
 }
