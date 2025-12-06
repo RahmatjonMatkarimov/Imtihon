@@ -1,7 +1,6 @@
 const { exec } = require("child_process");
 const path = require("path");
 
-// Loyiha root papkasi
 const repoPath = path.resolve(__dirname); 
 
 function gitPush() {
