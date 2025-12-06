@@ -5,6 +5,13 @@ import { Product } from 'src/models/products/entities/product.entity';
 @Table({ tableName: 'admins', timestamps: true })
 export class Admin extends Model {
   @Column({
+    type: DataType.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  })
+  declare id: number;
+
+  @Column({
     type: DataType.STRING,
     allowNull: false,
   })

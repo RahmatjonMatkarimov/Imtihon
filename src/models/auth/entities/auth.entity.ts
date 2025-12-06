@@ -3,6 +3,13 @@ import { Role } from "src/common/enums/role.enum";
 
 @Table({ tableName: 'auths', timestamps: true })
 export class Auth extends Model {
+  @Column({
+    type: DataType.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  })
+  declare id: number;
+
   @Column({ allowNull: false })
   username: string;
 

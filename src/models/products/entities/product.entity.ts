@@ -6,11 +6,18 @@ import {
     ForeignKey,
     BelongsTo,
 } from "sequelize-typescript";
+import { Admin } from "src/models/admins/entities/admin.entity";
 import { Category } from "src/models/category/entities/category.entity";
-import { User } from "src/models/users/entities/user.entity";
 
 @Table({ tableName: "products", timestamps: true })
-export class Product extends Model<Product> {
+export class Product extends Model {
+    @Column({
+        type: DataType.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    })
+    declare id: number;
+
     @Column({ type: DataType.STRING, allowNull: false })
     title: string;
 
@@ -20,18 +27,24 @@ export class Product extends Model<Product> {
     @Column({ type: DataType.STRING, allowNull: false })
     description: string;
 
-    @Column({ type: DataType.JSONB, allowNull: true })
+    @Column({ type: DataType.INTEGER, allowNull: false })
+    count: number;
+
+    @Column({ type: DataType.DATE, allowNull: false })
+    guaranteed: Date;
+
+    @Column({ type: DataType.JSONB, allowNull: false })
     attributes: any;
 
-    @Column({ type: DataType.STRING, allowNull: false })
-    img: string;
+    @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
+    images: string[];
 
-    @ForeignKey(() => User)
+    @ForeignKey(() => Admin)
     @Column({ type: DataType.INTEGER, allowNull: false })
     owner_id: number;
 
-    @BelongsTo(() => User)
-    owner: User;
+    @BelongsTo(() => Admin)
+    owner: Admin;
 
     @ForeignKey(() => Category)
     @Column({ type: DataType.INTEGER, allowNull: false })
