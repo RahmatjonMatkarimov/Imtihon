@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { ShipmentMethod } from './entities/shipment-method.entity';
 import { CreateShipmentMethodDto } from './dto/create-shipment-method.dto';
 import { UpdateShipmentMethodDto } from './dto/update-shipment-method.dto';
 
 @Injectable()
 export class ShipmentMethodService {
-  create(createShipmentMethodDto: CreateShipmentMethodDto) {
-    return 'This action adds a new shipmentMethod';
+  constructor(
+    @InjectModel(ShipmentMethod)
+    private readonly shipmentMethodModel: typeof ShipmentMethod,
+  ) { }
+
+  async create(createShipmentMethodDto: CreateShipmentMethodDto) {
+    const shipmentMethod = await this.shipmentMethodModel.create({ ...createShipmentMethodDto });
+    return shipmentMethod;
   }
 
-  findAll() {
-    return `This action returns all shipmentMethod`;
+  async findAll() {
+    return this.shipmentMethodModel.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} shipmentMethod`;
+  async findOne(id: number) {
+    const shipmentMethod = await this.shipmentMethodModel.findByPk(id);
+    if (!shipmentMethod) {
+      throw new NotFoundException(`ShipmentMethod not found`);
+    }
+    return shipmentMethod;
   }
 
-  update(id: number, updateShipmentMethodDto: UpdateShipmentMethodDto) {
-    return `This action updates a #${id} shipmentMethod`;
+  async update(id: number, updateShipmentMethodDto: UpdateShipmentMethodDto) {
+    const shipmentMethod = await this.findOne(id);
+    return shipmentMethod.update(updateShipmentMethodDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} shipmentMethod`;
+  async remove(id: number) {
+    const shipmentMethod = await this.findOne(id);
+    await shipmentMethod.destroy();
+    return { message: `ShipmentMethod has been deleted` };
   }
 }
