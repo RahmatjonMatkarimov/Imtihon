@@ -1,27 +1,31 @@
-import { IsArray, IsInt, IsNotEmpty, IsString, ArrayMinSize } from 'class-validator';
+import { IsArray, IsNumber, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class ProductIdCountDto {
+  @IsNumber()
+  id: number;
+
+  @IsNumber()
+  count: number;
+}
 
 export class CreatePurchaseDto {
-    @IsInt()
-    @IsNotEmpty()
-    user_id: number;
+  @IsNumber()
+  user_id: number;
 
-    @IsInt()
-    @IsNotEmpty()
-    address_id: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductIdCountDto)
+  product_ids: ProductIdCountDto[];
 
-    @IsInt()
-    @IsNotEmpty()
-    shipmentMethod_id: number;
+  @IsNumber()
+  address_id: number;
 
-    @IsInt()
-    @IsNotEmpty()
-    promo_id: number;
+  @IsNumber()
+  shipmentMethod_id: number;
 
-    @IsString()
-    @IsNotEmpty()
-    card_number: string;
+  @IsNumber()
+  promo_id: number;
 
-    @IsArray()
-    @ArrayMinSize(1) 
-    product_ids: number[];
+  card_number: string;
 }

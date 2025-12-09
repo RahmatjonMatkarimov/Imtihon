@@ -4,40 +4,92 @@ import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 import { Purchase } from './entities/purchase.entity';
 import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity';
+import { Product } from '../products/entities/product.entity';
+import { PromoUsage } from '../promo/entities/promo-usage.entity';
+import { Promo } from '../promo/entities/promo.entity';
 
 @Injectable()
 export class PurchaseService {
   constructor(
     @InjectModel(Purchase) private purchaseModel: typeof Purchase,
-    @InjectModel(ShoppingCart) private shoppingCartModel: typeof ShoppingCart
+    @InjectModel(ShoppingCart) private shoppingCartModel: typeof ShoppingCart,
+    @InjectModel(Product) private prodoctModel: typeof Product,
+    @InjectModel(PromoUsage) private promoUsageModel: typeof PromoUsage,
+    @InjectModel(Promo) private promoModel: typeof Promo,
   ) { }
 
   async create(createPurchaseDto: CreatePurchaseDto) {
-    const { user_id, product_ids } = createPurchaseDto;
+    const { user_id, product_ids, promo_id } = createPurchaseDto;
 
-    for (const productId of product_ids) {
-      const isExist = await this.shoppingCartModel.findOne({
-        where: { user_id, product_id: productId }
+    let promoUsage: any = null;
+    let discount = 0;
+    if (promo_id) {
+      promoUsage = await this.promoUsageModel.findOne({
+        where: { id: promo_id, userId: user_id },
+        include: [{ model: this.promoModel }],
       });
 
-      if (!isExist) {
-        throw new NotFoundException('Product not found');
+      if (!promoUsage) {
+        throw new NotFoundException("Promo topilmadi yoki ishlatilgan");
       }
+
+      discount = promoUsage.promo.price;
     }
 
-    const purchase = await this.purchaseModel.create({ ...createPurchaseDto });
-
-    for (const productId of product_ids) {
-      await this.shoppingCartModel.destroy({
-        where: { user_id, product_id: productId }
+    let totalPrice = 0;
+    for (const item of product_ids) {
+      const cartItem = await this.shoppingCartModel.findOne({
+        where: { user_id, product_id: item.id },
       });
+
+      if (!cartItem) {
+        throw new NotFoundException(`Product savatda topilmadi`);
+      }
+
+      const product = await this.prodoctModel.findByPk(item.id);
+      if (!product) {
+        throw new NotFoundException(`Product topilmadi`);
+      }
+
+      const itemCount = item.count || 1;
+      if (product.count < itemCount) {
+        throw new NotFoundException(`Product yetarli miqdorda mavjud emas`);
+      }
+
+      product.count -= itemCount;
+      await product.save();
+
+      totalPrice += product.price * itemCount;
+    }
+
+    if (promoUsage) {
+      totalPrice -= discount;
+      if (totalPrice < 0) totalPrice = 0;
+    }
+
+    const purchase = await this.purchaseModel.create({
+      ...createPurchaseDto,
+      promo_id: promoUsage ? promoUsage.id : null,
+      totalPrice,
+    });
+
+    for (const item of product_ids) {
+      await this.shoppingCartModel.destroy({
+        where: { user_id, product_id: item.id },
+      });
+    }
+
+    if (promoUsage) {
+      await promoUsage.save();
     }
 
     return {
-      message: 'Xarid muvaffaqiyatli yakunlandi',
+      message: "Xarid muvaffaqiyatli yakunlandi",
       purchase,
     };
   }
+
+
 
   async findAll() {
     return await this.purchaseModel.findAll({
@@ -51,7 +103,7 @@ export class PurchaseService {
     });
 
     if (!purchase) {
-      throw new NotFoundException('Purchase topilmadi');
+      throw new NotFoundException("Purchase topilmadi");
     }
 
     return purchase;
@@ -59,21 +111,17 @@ export class PurchaseService {
 
   async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
     const purchase = await this.purchaseModel.findByPk(id);
-    if (!purchase) {
-      throw new NotFoundException('Purchase topilmadi');
-    }
+    if (!purchase) throw new NotFoundException("Purchase topilmadi");
 
-    return await purchase.update(updatePurchaseDto);
+    return purchase.update(updatePurchaseDto);
   }
 
   async remove(id: number) {
     const purchase = await this.purchaseModel.findByPk(id);
-    if (!purchase) {
-      throw new NotFoundException('Purchase topilmadi');
-    }
+    if (!purchase) throw new NotFoundException("Purchase topilmadi");
 
     await purchase.destroy();
-
-    return { message: 'Purchase o‘chirildi' };
+    return { message: "Purchase o‘chirildi" };
   }
 }
+
