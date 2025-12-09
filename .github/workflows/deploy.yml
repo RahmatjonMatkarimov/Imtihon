@@ -24,7 +24,7 @@ jobs:
       - name: Deploy to server
         env:
           HOST: ${{ secrets.HOST }}
-          USER: ${{ secrets.USER }}
+          USER: ${{ secrets.USERNAME }}
           APP_DIR: /ci_cd
           PORT: 22
         run: |
