@@ -12,6 +12,9 @@ import { CommentsModule } from './models/comments/comments.module';
 import { ShoppingCartModule } from './models/shopping-cart/shopping-cart.module';
 import { LikesProductModule } from './models/likes-product/likes-product.module';
 import { PromoModule } from './models/promo/promo.module';
+import { PurchaseModule } from './models/purchase/purchase.module';
+import { AddressModule } from './models/address/address.module';
+import { ShipmentMethodModule } from './models/shipment-method/shipment-method.module';
 
 @Module({
   imports: [
@@ -44,6 +47,9 @@ import { PromoModule } from './models/promo/promo.module';
     ShoppingCartModule,
     LikesProductModule,
     PromoModule,
+    PurchaseModule,
+    AddressModule,
+    ShipmentMethodModule,
   ],
 })
 export class AppModule { }

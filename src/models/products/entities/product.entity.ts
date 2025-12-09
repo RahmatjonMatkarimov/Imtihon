@@ -11,6 +11,7 @@ import { Admin } from "src/models/admins/entities/admin.entity";
 import { Category } from "src/models/category/entities/category.entity";
 import { Comment } from "src/models/comments/entities/comment.entity";
 import { Like } from "src/models/likes-product/entities/likes-product.entity";
+import { PromoUsage } from "src/models/promo/entities/promo-usage.entity";
 import { ShoppingCart } from "src/models/shopping-cart/entities/shopping-cart.entity";
 
 @Table({ tableName: "products", timestamps: true })
@@ -65,4 +66,7 @@ export class Product extends Model {
 
     @HasMany(() => Like)
     likes: Like[];
+
+    @HasMany(() => PromoUsage)
+    promoUsages: PromoUsage[];
 }

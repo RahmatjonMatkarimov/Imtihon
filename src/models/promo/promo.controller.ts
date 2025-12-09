@@ -5,7 +5,7 @@ import { UpdatePromoDto } from './dto/update-promo.dto';
 
 @Controller('promo')
 export class PromoController {
-  constructor(private readonly promoService: PromoService) {}
+  constructor(private readonly promoService: PromoService) { }
 
   @Post()
   create(@Body() createPromoDto: CreatePromoDto) {
@@ -31,4 +31,10 @@ export class PromoController {
   remove(@Param('id') id: string) {
     return this.promoService.remove(+id);
   }
+
+  @Post('use')
+  usePromo(@Body() { userId, promoCode, prodoct_id }: { userId: number, promoCode: string, prodoct_id: number },) {
+    return this.promoService.usePromo(userId, promoCode, prodoct_id);
+  }
+
 }

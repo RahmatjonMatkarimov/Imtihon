@@ -3,10 +3,13 @@ import { PromoService } from './promo.service';
 import { PromoController } from './promo.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Promo } from './entities/promo.entity';
+import { User } from '../users/entities/user.entity';
+import { Product } from '../products/entities/product.entity';
+import { PromoUsage } from './entities/promo-usage.entity';
 
 @Module({
-  imports:[SequelizeModule.forFeature([Promo])],
+  imports: [SequelizeModule.forFeature([Promo, User, Product, PromoUsage])],
   controllers: [PromoController],
   providers: [PromoService],
 })
-export class PromoModule {}
+export class PromoModule { }
