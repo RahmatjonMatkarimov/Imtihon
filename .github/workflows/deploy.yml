@@ -16,7 +16,7 @@ jobs:
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
         shell: bash
@@ -28,7 +28,7 @@ jobs:
           APP_DIR: /ci_cd
           PORT: ${{ secrets.PORT }}
         run: |
-          ssh -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no $USER@$HOST << EOF
+          ssh $USER@$HOST << EOF
             set -e
 
             if [ ! -d "$APP_DIR" ]; then
