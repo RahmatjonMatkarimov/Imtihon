@@ -45,7 +45,15 @@ jobs:
 
             git pull origin main
 
-            echo "PORT=$PORT" > .env
+            echo "
+            PORT=$PORT
+            DB_HOST=$DB_HOST
+            DB_PORT=$DB_PORT
+            DB_USERNAME=$DB_USERNAME
+            DB_PASSWORD=$DB_PASSWORD
+            DB_NAME=$DB_NAME
+            APP_PASS=$APP_PASS
+            " > .env
             npm install
             npm run build
 
