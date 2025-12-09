@@ -1,6 +1,8 @@
 import { Column, Model, Table, DataType, HasMany } from 'sequelize-typescript';
 import { Role } from 'src/common/enums/role.enum';
 import { Comment } from 'src/models/comments/entities/comment.entity';
+import { Like } from 'src/models/likes-product/entities/likes-product.entity';
+import { ShoppingCart } from 'src/models/shopping-cart/entities/shopping-cart.entity';
 
 @Table({ tableName: 'users', timestamps: true })
 export class User extends Model {
@@ -39,4 +41,10 @@ export class User extends Model {
 
   @HasMany(() => Comment)
   comments: Comment[];
+
+  @HasMany(() => ShoppingCart)
+  carts: ShoppingCart[];
+
+  @HasMany(() => Like)
+  likes: Like[];
 }

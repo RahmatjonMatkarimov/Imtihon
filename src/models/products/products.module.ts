@@ -7,10 +7,11 @@ import { Category } from '../category/entities/category.entity';
 import { Admin } from '../admins/entities/admin.entity';
 import { User } from '../users/entities/user.entity';
 import { Comment } from '../comments/entities/comment.entity';
+import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Product, Admin, Category,User,Comment]),
+    SequelizeModule.forFeature([Product, Admin, Category, User, Comment, ShoppingCart]),
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

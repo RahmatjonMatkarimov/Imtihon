@@ -7,6 +7,7 @@ import { Admin } from '../admins/entities/admin.entity';
 import { Category } from '../category/entities/category.entity';
 import { Comment } from '../comments/entities/comment.entity';
 import { User } from '../users/entities/user.entity';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class ProductsService {
@@ -34,21 +35,115 @@ export class ProductsService {
     return 'asd';
   }
 
-  async findAll() {
-    return this.productModel.findAll({
-      include: [Admin, Category, { model: Comment, include: [User] }],
+  async findAll(query: any) {
+    const {
+      page = 1,
+      limit = 12,
+      minPrice,
+      maxPrice,
+      category_id,
+      owner_id,
+      search,
+      ...attrs
+    } = query;
+
+    const offset = (page - 1) * limit;
+
+    const where: any = {};
+
+    if (search) {
+      where.title = { [Op.iLike]: `%${search}%` };
+    }
+
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) where.price[Op.gte] = Number(minPrice);
+      if (maxPrice) where.price[Op.lte] = Number(maxPrice);
+    }
+
+    if (category_id) where.category_id = category_id;
+    if (owner_id) where.owner_id = owner_id;
+    for (const key in attrs) {
+      if (attrs[key] !== undefined) {
+        where[`attributes.${key}`] = attrs[key];
+      }
+    }
+
+    const products = await this.productModel.findAndCountAll({
+      where,
+      include: [
+        Admin,
+        Category,
+        { model: Comment, include: [User], separate: true }
+      ],
+      limit: Number(limit),
+      offset,
       order: [['createdAt', 'DESC']],
     });
+
+    return {
+      total: products.count,
+      pages: Math.ceil(products.count / limit),
+      currentPage: Number(page),
+      items: products.rows,
+    };
   }
 
+async findOne(id: number) {
+  const product = await this.productModel.findByPk(id, {
+    include: [
+      Admin,
+      Category,
+      {
+        model: Comment,
+        include: [User],
+        separate: true,
+        order: [['createdAt', 'DESC']],
+      },
+    ],
+  });
 
-  async findOne(id: number) {
-    const product = await this.productModel.findByPk(id, {
-      include: [Admin, Category, { model: Comment, include: [User], order: [['createdAt', 'DESC']] }],
-    });
-    if (!product) throw new NotFoundException('Product not found');
-    return product;
-  }
+  if (!product) throw new NotFoundException('Product not found');
+
+  const comments = product.comments || [];
+  const totalReviews = comments.length;
+  const ratingCount = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+  comments.forEach(c => {
+    const r = Math.round(c.rating);
+    if (r >= 1 && r <= 5) ratingCount[r]++;
+  });
+
+  const averageRating: any = totalReviews 
+    ? (comments.reduce((sum, c) => sum + c.rating, 0) / totalReviews).toFixed(1) 
+    : 0;
+
+  const recommendations = await this.productModel.findAll({
+    where: {
+      category_id: product.category_id,
+      id: { [Op.ne]: product.id },
+    },
+    limit: 5, 
+    include: [Admin, Category],
+    order: [['createdAt', 'DESC']],
+  });
+
+  return {
+    ...product.toJSON(),
+    rating: {
+      average: parseFloat(averageRating),
+      totalReviews,
+      breakdown: {
+        excellent: ratingCount[5],
+        good: ratingCount[4],
+        average: ratingCount[3],
+        belowAverage: ratingCount[2],
+        poor: ratingCount[1],
+      }
+    },
+    recommendations, 
+  };
+}
 
 
   async update(
