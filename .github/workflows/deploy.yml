@@ -45,7 +45,14 @@ jobs:
 
             git pull origin main
 
-            echo "PORT=$PORT" > .env
+            echo "
+            PORT=$PORT
+            DB_HOST="localhost"
+            DB_PORT=5432
+            DB_USERNAME="postgres"
+            DB_PASSWORD="admin"
+            DB_NAME="shop"
+            " > .env
             npm install
             npm run build
 
