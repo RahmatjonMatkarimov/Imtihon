@@ -11,6 +11,7 @@ import { ProductsModule } from './models/products/products.module';
 import { CommentsModule } from './models/comments/comments.module';
 import { ShoppingCartModule } from './models/shopping-cart/shopping-cart.module';
 import { LikesProductModule } from './models/likes-product/likes-product.module';
+import { PromoModule } from './models/promo/promo.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { LikesProductModule } from './models/likes-product/likes-product.module'
     CommentsModule,
     ShoppingCartModule,
     LikesProductModule,
+    PromoModule,
   ],
 })
 export class AppModule { }
