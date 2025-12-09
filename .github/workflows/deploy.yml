@@ -21,10 +21,6 @@ jobs:
           ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
         shell: bash
 
-      - name: Test SSH connection
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.USER }}@${{ secrets.HOST }} "echo 'SSH connection successful'"
-
       - name: Deploy to server
         env:
           HOST: ${{ secrets.HOST }}
