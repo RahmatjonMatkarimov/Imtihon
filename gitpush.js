@@ -19,5 +19,5 @@ function gitPush() {
         console.log("Git push natija:", stdout || "Hech narsa commit qilinmadi.");
     });
 }
-
+ 
 gitPush();
