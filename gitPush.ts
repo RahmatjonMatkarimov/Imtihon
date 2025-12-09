@@ -1,11 +1,11 @@
-const { exec } = require("child_process");
-const path = require("path");
+import { exec } from "child_process";
+import path from "path";
 
-const repoPath = path.resolve(__dirname); 
+const repoPath: string = path.resolve(__dirname);
 
-function gitPush() {
-    const commitMessage = `${new Date().toString()}`;
-    const command = `git add . && git commit -m "${commitMessage}" && git push origin main`;
+function gitPush(): void {
+    const commitMessage: string = `${new Date().toString()}`;
+    const command: string = `git add . && git commit -m "${commitMessage}" && git push origin main`;
 
     exec(command, { cwd: repoPath }, (err, stdout, stderr) => {
         if (err) {
@@ -19,5 +19,5 @@ function gitPush() {
         console.log("Git push natija:", stdout || "Hech narsa commit qilinmadi.");
     });
 }
- 
+
 gitPush();
