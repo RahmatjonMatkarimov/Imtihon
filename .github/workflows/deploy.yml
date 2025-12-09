@@ -23,12 +23,12 @@ jobs:
 
       - name: Deploy to server
         env:
-          HOST: ${{ secrets.HOST }}
-          USER: ${{ secrets.USERNAME }}
+          HOST: 213.139.208.157
+          USER: root
           APP_DIR: /ci_cd
           PORT: 22
         run: |
-          ssh $USER@$HOST << EOF
+          ssh root@213.139.208.157 << EOF
             set -e
 
             if [ ! -d "$APP_DIR" ]; then
