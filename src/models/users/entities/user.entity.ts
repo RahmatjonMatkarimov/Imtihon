@@ -3,6 +3,7 @@ import { Role } from 'src/common/enums/role.enum';
 import { Comment } from 'src/models/comments/entities/comment.entity';
 import { Like } from 'src/models/likes-product/entities/likes-product.entity';
 import { PromoUsage } from 'src/models/promo/entities/promo-usage.entity';
+import { Purchase } from 'src/models/purchase/entities/purchase.entity';
 import { ShoppingCart } from 'src/models/shopping-cart/entities/shopping-cart.entity';
 
 @Table({ tableName: 'users', timestamps: true })
@@ -51,4 +52,7 @@ export class User extends Model {
 
   @HasMany(() => PromoUsage)
   promoUsages: PromoUsage[];
+
+  @HasMany(() => Purchase)
+  purchases: Purchase[];
 }

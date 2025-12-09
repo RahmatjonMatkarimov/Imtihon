@@ -1,7 +1,8 @@
-import { Column, DataType, Model, Table, ForeignKey } from "sequelize-typescript";
+import { Column, DataType, Model, Table, ForeignKey, HasMany } from "sequelize-typescript";
 import { Promo } from "../../promo/entities/promo.entity";
 import { User } from "../../users/entities/user.entity";
 import { Product } from "src/models/products/entities/product.entity";
+import { Purchase } from "src/models/purchase/entities/purchase.entity";
 
 @Table({ tableName: "promo_usage" })
 export class PromoUsage extends Model {
@@ -16,4 +17,7 @@ export class PromoUsage extends Model {
     @ForeignKey(() => Product)
     @Column({ type: DataType.INTEGER, allowNull: false })
     product_id: number;
+
+    @HasMany(() => Purchase)
+    purchases: Purchase[];
 }

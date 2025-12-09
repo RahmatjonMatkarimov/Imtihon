@@ -15,6 +15,7 @@ import { PromoModule } from './models/promo/promo.module';
 import { PurchaseModule } from './models/purchase/purchase.module';
 import { AddressModule } from './models/address/address.module';
 import { ShipmentMethodModule } from './models/shipment-method/shipment-method.module';
+import { HeroModule } from './models/hero/hero.module';
 
 
 @Module({
@@ -51,6 +52,7 @@ import { ShipmentMethodModule } from './models/shipment-method/shipment-method.m
     PurchaseModule,
     AddressModule,
     ShipmentMethodModule,
+    HeroModule,
   ],
 })
 export class AppModule { }

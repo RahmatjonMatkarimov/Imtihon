@@ -1,3 +1,4 @@
+import { Purchase } from 'src/models/purchase/entities/purchase.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -12,7 +13,8 @@ export class CommentsService {
     @InjectModel(Comment) private commentModel: typeof Comment,
     @InjectModel(User) private userModel: typeof User,
     @InjectModel(Product) private productModel: typeof Product,
-  ) {}
+    @InjectModel(Purchase) private purchaseModel: typeof Purchase,
+  ) { }
 
   async create(createCommentDto: CreateCommentDto): Promise<Comment> {
     const { user_id, product_id, comment, rating } = createCommentDto;
@@ -22,6 +24,12 @@ export class CommentsService {
 
     const product = await this.productModel.findByPk(product_id);
     if (!product) throw new NotFoundException('Product not found');
+
+    const purchase = await this.purchaseModel.findAll({ where: { user_id } });
+    if (!purchase || purchase.length === 0) {
+      throw new NotFoundException('Avval mahsulotni sotib oling');
+    }
+
 
     const newComment = await this.commentModel.create({
       user_id,

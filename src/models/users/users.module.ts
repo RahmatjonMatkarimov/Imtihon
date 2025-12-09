@@ -5,10 +5,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Auth } from 'src/models/auth/entities/auth.entity';
 import { User } from './entities/user.entity';
 import { PromoUsage } from '../promo/entities/promo-usage.entity';
+import { Purchase } from '../purchase/entities/purchase.entity';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([User, Auth, PromoUsage]),
+    SequelizeModule.forFeature([User, Auth, PromoUsage,Purchase]),
   ],
   controllers: [UsersController],
   providers: [UsersService],

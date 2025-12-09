@@ -6,9 +6,10 @@ import { Promo } from './entities/promo.entity';
 import { User } from '../users/entities/user.entity';
 import { Product } from '../products/entities/product.entity';
 import { PromoUsage } from './entities/promo-usage.entity';
+import { Purchase } from '../purchase/entities/purchase.entity';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Promo, User, Product, PromoUsage])],
+  imports: [SequelizeModule.forFeature([Promo, User, Product, PromoUsage,Purchase])],
   controllers: [PromoController],
   providers: [PromoService],
 })
