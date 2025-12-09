@@ -22,9 +22,7 @@ export class ShipmentMethodService {
 
   async findOne(id: number) {
     const shipmentMethod = await this.shipmentMethodModel.findByPk(id);
-    if (!shipmentMethod) {
-      throw new NotFoundException(`ShipmentMethod not found`);
-    }
+    if (!shipmentMethod) throw new NotFoundException(`ShipmentMethod not found`);
     return shipmentMethod;
   }
 

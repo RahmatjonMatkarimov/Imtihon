@@ -7,9 +7,10 @@ import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity';
 import { Product } from '../products/entities/product.entity';
 import { PromoUsage } from '../promo/entities/promo-usage.entity';
 import { Promo } from '../promo/entities/promo.entity';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Purchase, ShoppingCart, Product, PromoUsage,Promo])],
+  imports: [SequelizeModule.forFeature([Purchase, ShoppingCart, Product, PromoUsage,Promo]),AuthModule],
   controllers: [PurchaseController],
   providers: [PurchaseService],
 })

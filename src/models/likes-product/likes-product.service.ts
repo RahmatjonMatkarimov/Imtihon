@@ -8,17 +8,17 @@ export class LikeService {
     constructor(
         @InjectModel(Like)
         private likeModel: typeof Like
-    ) {}
+    ) { }
 
     async likeProduct(userId: number, productId: number) {
-        const existing = await this.likeModel.findOne({ where: { user_id: userId, product_id: productId }});
+        const existing = await this.likeModel.findOne({ where: { user_id: userId, product_id: productId } });
         if (existing) return { message: 'Mahsulot allaqachon like qilingan' };
 
         return this.likeModel.create({ user_id: userId, product_id: productId });
     }
 
     async unlikeProduct(userId: number, productId: number) {
-        const existing = await this.likeModel.findOne({ where: { user_id: userId, product_id: productId }});
+        const existing = await this.likeModel.findOne({ where: { user_id: userId, product_id: productId } });
         if (!existing) throw new NotFoundException('Mahsulot like qilingan emas');
 
         await existing.destroy();

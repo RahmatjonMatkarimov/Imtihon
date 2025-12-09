@@ -1,100 +1,77 @@
-import {
-  Controller, Post, Body,
-  Get, Param, Patch, Delete,
-  Query,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBody,
-  ApiParam,
-  ApiQuery,
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
-} from '@nestjs/swagger';
+import { Controller, Post, Body, Get, Param, Patch, Delete, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiQuery, ApiBadRequestResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
+
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Post()
   @ApiOperation({ summary: 'Yangi admin yaratish' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        username: { type: 'string', example: 'john_admin' },
-        email: { type: 'string', example: 'admin@example.com' },
-        password: { type: 'string', example: 'SecurePass123!' },
-      },
-      required: ['username', 'email', 'password'],
-    },
-  })
+  @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'Admin muvaffaqiyatli yaratildi' })
-  @ApiBadRequestResponse({ description: 'Noto\'g\'ri ma\'lumot yoki foydalanuvchi allaqachon mavjud' })
-  create(@Body() createAdminDto: CreateUserDto) {
-    return this.usersService.create(createAdminDto);
+  @ApiBadRequestResponse({ description: 'Noto‘g‘ri ma‘lumot yoki foydalanuvchi allaqachon mavjud' })
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Get()
   @ApiOperation({ summary: 'Barcha adminlarni olish' })
-  @ApiQuery({ name: 'search', required: false, description: 'Username yoki email bo\'yicha qidirish' })
-  @ApiQuery({ name: 'page', required: false, type: 'number', example: 1 })
-  @ApiQuery({ name: 'limit', required: false, type: 'number', example: 10 })
-  @ApiResponse({ status: 200, description: 'Adminlar ro\'yxati' })
-  async findAll(
+  @ApiQuery({ name: 'search', required: false, description: 'Username yoki email bo‘yicha qidirish' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiResponse({ status: 200, description: 'Adminlar ro‘yxati' })
+  findAll(
     @Query('search') search?: string,
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
   ) {
-    const pageNum = parseInt(page, 10) || 1;
-    const limitNum = parseInt(limit, 10) || 10;
-
-    return this.usersService.findAll(search, pageNum, limitNum);
+    return this.usersService.findAll(search, parseInt(page), parseInt(limit));
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
   @Get(':id')
   @ApiOperation({ summary: 'Bitta adminni olish' })
   @ApiParam({ name: 'id', example: 1 })
   @ApiResponse({ status: 200, description: 'Admin topildi' })
   @ApiNotFoundResponse({ description: 'Admin topilmadi' })
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Patch(':id')
   @ApiOperation({ summary: 'Adminni yangilash' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        username: { type: 'string', example: 'john_admin_updated' },
-        email: { type: 'string', example: 'admin_updated@example.com' },
-        password: { type: 'string', example: 'NewSecurePass123!' },
-      },
-    },
-  })
+  @ApiBody({ type: UpdateUserDto })
   @ApiResponse({ status: 200, description: 'Admin yangilandi' })
   @ApiNotFoundResponse({ description: 'Admin topilmadi' })
-  update(
-    @Param('id') id: string,
-    @Body() updateAdminDto: UpdateUserDto,
-  ) {
-    return this.usersService.update(+id, updateAdminDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(id, updateUserDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Delete(':id')
-  @ApiOperation({ summary: 'Adminni o\'chirish' })
+  @ApiOperation({ summary: 'Adminni o‘chirish' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiResponse({ status: 200, description: 'Admin o\'chirildi' })
+  @ApiResponse({ status: 200, description: 'Admin o‘chirildi' })
   @ApiNotFoundResponse({ description: 'Admin topilmadi' })
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
   }
 }

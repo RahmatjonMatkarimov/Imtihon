@@ -42,24 +42,19 @@ export class PurchaseService {
         where: { user_id, product_id: item.id },
       });
 
-      if (!cartItem) {
-        throw new NotFoundException(`Product savatda topilmadi`);
-      }
+      if (!cartItem) throw new NotFoundException(`Product savatda topilmadi`);
 
       const product = await this.prodoctModel.findByPk(item.id);
-      if (!product) {
-        throw new NotFoundException(`Product topilmadi`);
-      }
+      if (!product) throw new NotFoundException(`Product topilmadi`);
 
-      const itemCount = item.count || 1;
-      if (product.count < itemCount) {
+      if (product.count < item.count) {
         throw new NotFoundException(`Product yetarli miqdorda mavjud emas`);
       }
 
-      product.count -= itemCount;
+      product.count -= item.count;
       await product.save();
 
-      totalPrice += product.price * itemCount;
+      totalPrice += product.price * item.count;
     }
 
     if (promoUsage) {
@@ -79,9 +74,7 @@ export class PurchaseService {
       });
     }
 
-    if (promoUsage) {
-      await promoUsage.save();
-    }
+    if (promoUsage) await promoUsage.save();
 
     return {
       message: "Xarid muvaffaqiyatli yakunlandi",
@@ -89,39 +82,26 @@ export class PurchaseService {
     };
   }
 
-
-
   async findAll() {
-    return await this.purchaseModel.findAll({
-      include: { all: true },
-    });
+    return await this.purchaseModel.findAll({ include: { all: true } });
   }
 
   async findOne(id: number) {
-    const purchase = await this.purchaseModel.findByPk(id, {
-      include: { all: true },
-    });
-
-    if (!purchase) {
-      throw new NotFoundException("Purchase topilmadi");
-    }
-
+    const purchase = await this.purchaseModel.findByPk(id, { include: { all: true } });
+    if (!purchase) throw new NotFoundException("Purchase topilmadi");
     return purchase;
   }
 
   async update(id: number, updatePurchaseDto: UpdatePurchaseDto) {
     const purchase = await this.purchaseModel.findByPk(id);
     if (!purchase) throw new NotFoundException("Purchase topilmadi");
-
     return purchase.update(updatePurchaseDto);
   }
 
   async remove(id: number) {
     const purchase = await this.purchaseModel.findByPk(id);
     if (!purchase) throw new NotFoundException("Purchase topilmadi");
-
     await purchase.destroy();
     return { message: "Purchase o‘chirildi" };
   }
 }
-
