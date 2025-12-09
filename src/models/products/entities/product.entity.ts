@@ -5,9 +5,11 @@ import {
     Table,
     ForeignKey,
     BelongsTo,
+    HasMany,
 } from "sequelize-typescript";
 import { Admin } from "src/models/admins/entities/admin.entity";
 import { Category } from "src/models/category/entities/category.entity";
+import { Comment } from "src/models/comments/entities/comment.entity";
 
 @Table({ tableName: "products", timestamps: true })
 export class Product extends Model {
@@ -52,4 +54,7 @@ export class Product extends Model {
 
     @BelongsTo(() => Category)
     category: Category;
+
+    @HasMany(() => Comment)
+    comments: Comment[];
 }

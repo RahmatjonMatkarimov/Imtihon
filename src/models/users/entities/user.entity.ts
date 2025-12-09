@@ -1,5 +1,6 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, HasMany } from 'sequelize-typescript';
 import { Role } from 'src/common/enums/role.enum';
+import { Comment } from 'src/models/comments/entities/comment.entity';
 
 @Table({ tableName: 'users', timestamps: true })
 export class User extends Model {
@@ -36,4 +37,6 @@ export class User extends Model {
   })
   role: Role;
 
+  @HasMany(() => Comment)
+  comments: Comment[];
 }

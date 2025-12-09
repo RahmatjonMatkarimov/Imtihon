@@ -5,6 +5,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Product } from './entities/product.entity';
 import { Admin } from '../admins/entities/admin.entity';
 import { Category } from '../category/entities/category.entity';
+import { Comment } from '../comments/entities/comment.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -12,6 +14,8 @@ export class ProductsService {
     @InjectModel(Product) private productModel: typeof Product,
     @InjectModel(Admin) private adminModel: typeof Admin,
     @InjectModel(Category) private categoryModel: typeof Category,
+    @InjectModel(Comment) private commentModel: typeof Comment,
+    @InjectModel(User) private userModel: typeof User,
   ) { }
 
   async create(createDto: CreateProductDto, files: Express.Multer.File[]) {
@@ -32,19 +36,20 @@ export class ProductsService {
 
   async findAll() {
     return this.productModel.findAll({
-      include: [Admin, Category],
+      include: [Admin, Category, { model: Comment, include: [User] }],
       order: [['createdAt', 'DESC']],
     });
   }
 
+
   async findOne(id: number) {
     const product = await this.productModel.findByPk(id, {
-      include: [Admin, Category],
+      include: [Admin, Category, { model: Comment, include: [User], order: [['createdAt', 'DESC']] }],
     });
-
     if (!product) throw new NotFoundException('Product not found');
     return product;
   }
+
 
   async update(
     id: number,
