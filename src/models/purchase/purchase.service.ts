@@ -25,12 +25,12 @@ export class PurchaseService {
     let discount = 0;
     if (promo_id) {
       promoUsage = await this.promoUsageModel.findOne({
-        where: { id: promo_id, userId: user_id },
+        where: { id: promo_id },
         include: [{ model: this.promoModel }],
       });
 
       if (!promoUsage) {
-        throw new NotFoundException("Promo topilmadi yoki ishlatilgan");
+        throw new NotFoundException("Promo topilmadi");
       }
 
       discount = promoUsage.promo.price;
