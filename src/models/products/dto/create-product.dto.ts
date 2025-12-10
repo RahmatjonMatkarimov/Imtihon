@@ -21,7 +21,6 @@ export class CreateProductDto {
   count: number;
 
   @ApiProperty({ description: 'Mahsulot kafolat muddati', example: '2026-12-10' })
-  @IsDate()
   @IsOptional()
   guaranteed?: Date;
 
