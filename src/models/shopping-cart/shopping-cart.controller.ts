@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Delete, Param, Body, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ShoppingCartService } from './shopping-cart.service';
 import { CreateShoppingCartDto } from './dto/create-shopping-cart.dto';
-import { ApiTags, ApiOperation, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 
+@ApiBearerAuth('access-token')
 @UseGuards(AuthGuard)
 @ApiTags('Shopping Cart')
 @Controller('cart')

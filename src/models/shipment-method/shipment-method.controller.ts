@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGua
 import { ShipmentMethodService } from './shipment-method.service';
 import { CreateShipmentMethodDto } from './dto/create-shipment-method.dto';
 import { UpdateShipmentMethodDto } from './dto/update-shipment-method.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 
+@ApiBearerAuth('access-token')
 @UseGuards(AuthGuard)
 @ApiTags('Shipment Method')
 @Controller('shipment-method')

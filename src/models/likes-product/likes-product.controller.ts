@@ -1,10 +1,11 @@
 import { Controller, Post, Delete, Get, Body, Param, UseGuards } from '@nestjs/common';
 import { LikeService } from './likes-product.service';
 import { CreateLikesProductDto } from './dto/create-likes-product.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @UseGuards(AuthGuard)
+@ApiBearerAuth('access-token')
 @ApiTags('likes')
 @Controller('likes')
 export class LikeController {

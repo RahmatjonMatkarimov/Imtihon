@@ -2,7 +2,7 @@ import { Controller, Post, Body, Get, Param, Patch, Delete, Query, ParseIntPipe,
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiQuery, ApiBadRequestResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiQuery, ApiBadRequestResponse, ApiNotFoundResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -10,6 +10,7 @@ import { Role } from 'src/common/enums/role.enum';
 
 
 @ApiTags('users')
+@ApiBearerAuth('access-token')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }

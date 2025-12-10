@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { PromoService } from './promo.service';
 import { CreatePromoDto } from './dto/create-promo.dto';
 import { UpdatePromoDto } from './dto/update-promo.dto';
-import { ApiTags, ApiOperation, ApiBody, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
 
 @ApiTags('promo')
+@ApiBearerAuth('access-token')
 @Controller('promo')
 export class PromoController {
   constructor(private readonly promoService: PromoService) { }
