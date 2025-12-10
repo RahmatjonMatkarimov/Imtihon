@@ -14,6 +14,8 @@ import { Role } from 'src/common/enums/role.enum';
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) { }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Post()
   @ApiOperation({ summary: 'Yangi admin yaratish' })
   @ApiResponse({ status: 201, description: 'Admin muvaffaqiyatli yaratildi' })

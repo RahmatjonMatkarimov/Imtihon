@@ -12,7 +12,7 @@ import {
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   @ApiOperation({
@@ -26,22 +26,15 @@ export class AuthController {
       admin: {
         summary: 'Admin akkaunt',
         value: {
-          email: 'admin@example.com',
-          password: 'admin123456',
+          email: "admin@example.com",
+          password: "SecurePass123!"
         },
       },
-      teacher: {
-        summary: 'O\'qituvchi akkaunt',
+      user: {
+        summary: 'user akkaunt',
         value: {
-          email: 'teacher@example.com',
-          password: 'teacher123456',
-        },
-      },
-      student: {
-        summary: 'Talaba akkaunt',
-        value: {
-          email: 'student@example.com',
-          password: 'student123456',
+          email: "user@example.com",
+          password: "SecurePass123!"
         },
       },
     },

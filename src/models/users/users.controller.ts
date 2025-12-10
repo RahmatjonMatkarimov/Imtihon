@@ -28,11 +28,11 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Get()
-  @ApiOperation({ summary: 'Barcha adminlarni olish' })
+  @ApiOperation({ summary: 'Barcha userlarni olish' })
   @ApiQuery({ name: 'search', required: false, description: 'Username yoki email bo‘yicha qidirish' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
-  @ApiResponse({ status: 200, description: 'Adminlar ro‘yxati' })
+  @ApiResponse({ status: 200, description: 'userlar ro‘yxati' })
   findAll(
     @Query('search') search?: string,
     @Query('page') page: string = '1',
@@ -44,10 +44,10 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
   @Get(':id')
-  @ApiOperation({ summary: 'Bitta adminni olish' })
+  @ApiOperation({ summary: 'Bitta userni olish' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiResponse({ status: 200, description: 'Admin topildi' })
-  @ApiNotFoundResponse({ description: 'Admin topilmadi' })
+  @ApiResponse({ status: 200, description: 'user topildi' })
+  @ApiNotFoundResponse({ description: 'user topilmadi' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
   }
@@ -55,11 +55,11 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Patch(':id')
-  @ApiOperation({ summary: 'Adminni yangilash' })
+  @ApiOperation({ summary: 'userni yangilash' })
   @ApiParam({ name: 'id', example: 1 })
   @ApiBody({ type: UpdateUserDto })
-  @ApiResponse({ status: 200, description: 'Admin yangilandi' })
-  @ApiNotFoundResponse({ description: 'Admin topilmadi' })
+  @ApiResponse({ status: 200, description: 'user yangilandi' })
+  @ApiNotFoundResponse({ description: 'user topilmadi' })
   update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
@@ -67,10 +67,10 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Delete(':id')
-  @ApiOperation({ summary: 'Adminni o‘chirish' })
+  @ApiOperation({ summary: 'userni o‘chirish' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiResponse({ status: 200, description: 'Admin o‘chirildi' })
-  @ApiNotFoundResponse({ description: 'Admin topilmadi' })
+  @ApiResponse({ status: 200, description: 'user o‘chirildi' })
+  @ApiNotFoundResponse({ description: 'user topilmadi' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
   }
