@@ -25,7 +25,7 @@ async function bootstrap() {
     .setDescription('My API description')
     .setVersion('1.0')
     .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      { type: 'http', scheme: 'Bearer', bearerFormat: 'JWT' },
       'access-token',
     )
     .build();
