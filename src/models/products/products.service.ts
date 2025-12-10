@@ -32,7 +32,7 @@ export class ProductsService {
       ...createDto, images
     });
 
-    return 'asd';
+    return { message: "yaratildi" };
   }
 
   async findAll(query: any) {
@@ -89,61 +89,61 @@ export class ProductsService {
     };
   }
 
-async findOne(id: number) {
-  const product = await this.productModel.findByPk(id, {
-    include: [
-      Admin,
-      Category,
-      {
-        model: Comment,
-        include: [User],
-        separate: true,
-        order: [['createdAt', 'DESC']],
+  async findOne(id: number) {
+    const product = await this.productModel.findByPk(id, {
+      include: [
+        Admin,
+        Category,
+        {
+          model: Comment,
+          include: [User],
+          separate: true,
+          order: [['createdAt', 'DESC']],
+        },
+      ],
+    });
+
+    if (!product) throw new NotFoundException('Product not found');
+
+    const comments = product.comments || [];
+    const totalReviews = comments.length;
+    const ratingCount = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+    comments.forEach(c => {
+      const r = Math.round(c.rating);
+      if (r >= 1 && r <= 5) ratingCount[r]++;
+    });
+
+    const averageRating: any = totalReviews
+      ? (comments.reduce((sum, c) => sum + c.rating, 0) / totalReviews).toFixed(1)
+      : 0;
+
+    const recommendations = await this.productModel.findAll({
+      where: {
+        category_id: product.category_id,
+        id: { [Op.ne]: product.id },
       },
-    ],
-  });
+      limit: 5,
+      include: [Admin, Category],
+      order: [['createdAt', 'DESC']],
+    });
 
-  if (!product) throw new NotFoundException('Product not found');
-
-  const comments = product.comments || [];
-  const totalReviews = comments.length;
-  const ratingCount = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-
-  comments.forEach(c => {
-    const r = Math.round(c.rating);
-    if (r >= 1 && r <= 5) ratingCount[r]++;
-  });
-
-  const averageRating: any = totalReviews 
-    ? (comments.reduce((sum, c) => sum + c.rating, 0) / totalReviews).toFixed(1) 
-    : 0;
-
-  const recommendations = await this.productModel.findAll({
-    where: {
-      category_id: product.category_id,
-      id: { [Op.ne]: product.id },
-    },
-    limit: 5, 
-    include: [Admin, Category],
-    order: [['createdAt', 'DESC']],
-  });
-
-  return {
-    ...product.toJSON(),
-    rating: {
-      average: parseFloat(averageRating),
-      totalReviews,
-      breakdown: {
-        excellent: ratingCount[5],
-        good: ratingCount[4],
-        average: ratingCount[3],
-        belowAverage: ratingCount[2],
-        poor: ratingCount[1],
-      }
-    },
-    recommendations, 
-  };
-}
+    return {
+      ...product.toJSON(),
+      rating: {
+        average: parseFloat(averageRating),
+        totalReviews,
+        breakdown: {
+          excellent: ratingCount[5],
+          good: ratingCount[4],
+          average: ratingCount[3],
+          belowAverage: ratingCount[2],
+          poor: ratingCount[1],
+        }
+      },
+      recommendations,
+    };
+  }
 
 
   async update(
