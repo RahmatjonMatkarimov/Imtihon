@@ -1,5 +1,5 @@
-import { Column, DataType, Model, Table, ForeignKey, HasMany } from "sequelize-typescript";
-import { Promo } from "../../promo/entities/promo.entity";
+import { Column, DataType, Model, Table, ForeignKey, BelongsTo, HasMany } from "sequelize-typescript";
+import { Promo } from "./promo.entity";
 import { User } from "../../users/entities/user.entity";
 import { Product } from "src/models/products/entities/product.entity";
 import { Purchase } from "src/models/purchase/entities/purchase.entity";
@@ -10,13 +10,22 @@ export class PromoUsage extends Model {
     @Column({ type: DataType.INTEGER, allowNull: false })
     promoId: number;
 
+    @BelongsTo(() => Promo)
+    promo: Promo;
+
     @ForeignKey(() => User)
     @Column({ type: DataType.INTEGER, allowNull: false })
     userId: number;
 
+    @BelongsTo(() => User)
+    user: User;
+
     @ForeignKey(() => Product)
     @Column({ type: DataType.INTEGER, allowNull: false })
     product_id: number;
+
+    @BelongsTo(() => Product)
+    product: Product;
 
     @HasMany(() => Purchase)
     purchases: Purchase[];
