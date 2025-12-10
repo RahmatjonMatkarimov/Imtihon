@@ -15,7 +15,7 @@ export class AdminsController {
   constructor(private readonly adminsService: AdminsService) { }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.User)
   @Post()
   @ApiOperation({ summary: 'Yangi admin yaratish' })
   @ApiResponse({ status: 201, description: 'Admin muvaffaqiyatli yaratildi' })
