@@ -19,7 +19,7 @@ export class PurchaseService {
   ) { }
 
   async create(createPurchaseDto: CreatePurchaseDto) {
-    const { user_id, product_ids, promo_id } = createPurchaseDto;
+    const { user_id, product_ids, promo_id, address_id, shipmentMethod_id, card_number } = createPurchaseDto;
 
     let promoUsage: any = null;
     let discount = 0;
@@ -30,14 +30,22 @@ export class PurchaseService {
       });
 
       if (!promoUsage) {
-        throw new NotFoundException("Promo topilmadi yoki ushbu userda mavjud emas");
+        const promo = await this.promoModel.findByPk(promo_id);
+        if (!promo) throw new NotFoundException("Promo topilmadi");
+
+        promoUsage = await this.promoUsageModel.create({
+          promoId: promo.id,
+          userId: user_id,
+          product_id: product_ids[0]?.id || null, 
+        });
+
+        await promoUsage.reload({ include: [{ model: this.promoModel }] });
       }
 
       discount = promoUsage.promo.price;
     }
-
-
     let totalPrice = 0;
+
     for (const item of product_ids) {
       const cartItem = await this.shoppingCartModel.findOne({
         where: { user_id, product_id: item.id },
@@ -64,8 +72,12 @@ export class PurchaseService {
     }
 
     const purchase = await this.purchaseModel.create({
-      ...createPurchaseDto,
+      user_id,
+      address_id,
+      shipmentMethod_id,
       promo_id: promoUsage ? promoUsage.id : null,
+      card_number,
+      product_ids,
       totalPrice,
     });
 
@@ -74,8 +86,6 @@ export class PurchaseService {
         where: { user_id, product_id: item.id },
       });
     }
-
-    if (promoUsage) await promoUsage.save();
 
     return {
       message: "Xarid muvaffaqiyatli yakunlandi",
