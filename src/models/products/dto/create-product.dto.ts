@@ -24,7 +24,7 @@ export class CreateProductDto {
   @IsOptional()
   guaranteed?: Date;
 
-  @ApiProperty({ description: 'Qo‘shimcha atributlar', example: { color: 'red', size: 'L' } })
+  @ApiProperty({ description: 'Qo\'shimcha atributlar', example: { color: 'red', size: 'L' } })
   @IsOptional()
   attributes?: any;
 
@@ -35,4 +35,15 @@ export class CreateProductDto {
   @ApiProperty({ description: 'Category ID', example: 2 })
   @IsInt()
   category_id: number;
+
+  @ApiProperty({
+    description: 'Mahsulot rasmlari',
+    type: 'array',
+    items: {
+      type: 'string',
+      format: 'binary',
+    },
+  })
+  @IsOptional()
+  files?: any[];
 }

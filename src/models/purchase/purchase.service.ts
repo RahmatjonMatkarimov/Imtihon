@@ -19,24 +19,9 @@ export class PurchaseService {
   ) { }
 
   async create(createPurchaseDto: CreatePurchaseDto) {
-    const { user_id, product_ids, promo_id } = createPurchaseDto;
-
+    const { user_id, product_ids } = createPurchaseDto;
     let promoUsage: any = null;
     let discount = 0;
-    if (promo_id) {
-      promoUsage = await this.promoUsageModel.findOne({
-        where: { promoId: promo_id, userId: user_id },
-        include: [{ model: this.promoModel }],
-      });
-
-      if (!promoUsage) {
-        throw new NotFoundException("Promo topilmadi yoki ushbu userda mavjud emas");
-      }
-
-      discount = promoUsage.promo.price;
-    }
-
-
     let totalPrice = 0;
     for (const item of product_ids) {
       const cartItem = await this.shoppingCartModel.findOne({

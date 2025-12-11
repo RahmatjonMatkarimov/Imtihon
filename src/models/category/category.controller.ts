@@ -44,15 +44,12 @@ export class CategoryController {
   @ApiOperation({ summary: 'Yangi category yaratish' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Category yaratish',
-    type: CreateCategoryDto,
     schema: {
       type: 'object',
       properties: {
-        title: { type: 'string', example: 'Electronics' },
+        title: { type: 'string', example: 'create Category' },
         img: { type: 'string', format: 'binary' },
       },
-      required: ['title'],
     },
   })
   @ApiResponse({ status: 201, description: 'Category yaratildi' })
